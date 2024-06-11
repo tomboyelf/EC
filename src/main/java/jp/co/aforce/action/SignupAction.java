@@ -62,7 +62,7 @@ public class SignupAction extends Action {
 
 			//		beanへ格納
 			User user = new User(username, password, lastname, firstname, sex, birthdate, mailaddress);
-			request.setAttribute("user", user);
+//			request.setAttribute("user", user);
 		}
 		return "signup-confirm.jsp";
 
