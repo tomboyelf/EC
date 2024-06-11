@@ -43,7 +43,7 @@ public class SignupAction extends Action {
 		errorMessageList = valid.validCheck(username, password, lastname, firstname, mailaddress);
 		errorMessageList.addAll(duplicationErrorMessageList);
 		//		errorMessageListリストに入った数字でエラーメッセージを呼び出す
-		System.out.println(errorMessageList);
+		System.out.println(errorMessageList+"aa");
 
 		if (errorMessageList.size() != 0) {
 			Message msg = new Message();
