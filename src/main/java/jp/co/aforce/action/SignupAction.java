@@ -6,6 +6,7 @@ import java.util.List;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jp.co.aforce.beans.User;
 import jp.co.aforce.dao.UserDAO;
 import jp.co.aforce.tool.Action;
@@ -15,6 +16,7 @@ import jp.co.aforce.tool.Valid;
 public class SignupAction extends Action {
 	public String execute(
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
+		HttpSession session = request.getSession();
 		response.setContentType("text/html; charset=UTF-8");
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -43,7 +45,6 @@ public class SignupAction extends Action {
 		errorMessageList = valid.validCheck(username, password, lastname, firstname, mailaddress);
 		errorMessageList.addAll(duplicationErrorMessageList);
 		//		errorMessageListリストに入った数字でエラーメッセージを呼び出す
-		System.out.println(errorMessageList);
 
 		if (errorMessageList.size() != 0) {
 			Message msg = new Message();
@@ -52,6 +53,8 @@ public class SignupAction extends Action {
 			}
 			return "signup.jsp";
 		}
+
+		//入力内容に問題がなければbeanに入れて確認画面へ飛ばす
 		if (errorMessageList.size() == 0) {
 			//		バラバラにとってきた３つをつなげる
 			String birthdateString = birthYear + "-" + birthMonth + "-" + birthDay;
@@ -61,8 +64,9 @@ public class SignupAction extends Action {
 			java.sql.Date birthdate = new java.sql.Date(birthdateUtil.getTime());
 
 			//		beanへ格納
-			User user = new User(username, password, lastname, firstname, sex, birthdate, mailaddress);
-			request.setAttribute("user", user);
+			User notTrueFinalRealuser = new User(username, password, lastname, firstname, sex, birthdate, mailaddress);
+			System.out.println("name:" + notTrueFinalRealuser.getUsername());
+			session.setAttribute("notTrueFinalRealuser", notTrueFinalRealuser);
 		}
 		return "signup-confirm.jsp";
 

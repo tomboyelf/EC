@@ -13,6 +13,11 @@
 	<a href="/ShoppingSite/views/index.jsp">サイトのロゴ</a>
 </p>
 
+<form action=".action" method="post">
+	<input type="text">
+	<input type="submit" value="検索">
+</form>
+
 
 <!-- 管理者アカウントでログインした際に、ヘッダーに管理者画面へのリンクを張る場合のコード
 el文の中とパスを書き換えて使用 -->
@@ -26,13 +31,13 @@ el文の中とパスを書き換えて使用 -->
 
 <!-- ログインしているかどうかをjstlを用いて判断 -->
 <c:choose>
-	<c:when test="${user != null }">
+	<c:when test="${user != null}">
 		<p>${user.username}さんでログイン中</p>
 		<p>
 			<a href="Logout.action">ログアウト</a>
 		</p>
 	</c:when>
-	<c:when test="${user == null }">
+	<c:when test="${user == null}">
 	<p>${loginError}</p>
 		<p>
 			<a href="/ShoppingSite/views/login.jsp">ログイン</a>

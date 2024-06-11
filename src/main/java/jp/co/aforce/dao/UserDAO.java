@@ -78,6 +78,7 @@ public class UserDAO extends DAO {
 				user.setUsername(rs.getString("username"));
 				user.setPassword(rs.getString("password"));
 				user.setLastname(rs.getString("lastname"));
+				user.setFirstname(rs.getString("firstname"));
 				user.setSex(rs.getString("sex"));
 				user.setBirthdate(rs.getDate("birthdate"));
 				user.setMailaddress(rs.getString("mailaddress"));
