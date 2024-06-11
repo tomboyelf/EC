@@ -5,13 +5,13 @@
 <%@taglib prefix="c" uri="jakarta.tags.core"%>
 		
 		<p>${loginErrorMsg }</p>
-		<form action="Login.action" method="post">
-			ユーザー名<input type="text" name="username" value="${username }" required><br>
-			パスワード<input type="password" name="password" required><br> 
-			<input type="submit" value="ログイン">
+		<form action = "Login.action" method = "post">
+			ユーザー名<input type = "text" name = "username" value = "${username }" required><br>
+			パスワード<input type = "password" name = "password" required><br> 
+			<input type = "submit" value = "ログイン">
 		</form>
 		<p>
-			<a href="signup.jsp">会員登録が済んでいない人はこちら</a>
+			<a href = "signup.jsp">会員登録が済んでいない人はこちら</a>
 		</p>
 		
-<%@include file="footer.jsp" %>
+<%@include file = "footer.jsp" %>

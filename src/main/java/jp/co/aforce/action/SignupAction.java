@@ -16,7 +16,7 @@ import jp.co.aforce.tool.Valid;
 public class SignupAction extends Action {
 	public String execute(
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
-		HttpSession session=request.getSession();
+		HttpSession session = request.getSession();
 		response.setContentType("text/html; charset=UTF-8");
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -53,7 +53,7 @@ public class SignupAction extends Action {
 			}
 			return "signup.jsp";
 		}
-		
+
 		//入力内容に問題がなければbeanに入れて確認画面へ飛ばす
 		if (errorMessageList.size() == 0) {
 			//		バラバラにとってきた３つをつなげる
@@ -65,7 +65,7 @@ public class SignupAction extends Action {
 
 			//		beanへ格納
 			User notTrueFinalRealuser = new User(username, password, lastname, firstname, sex, birthdate, mailaddress);
-			System.out.println("name:"+notTrueFinalRealuser.getUsername());
+			System.out.println("name:" + notTrueFinalRealuser.getUsername());
 			session.setAttribute("notTrueFinalRealuser", notTrueFinalRealuser);
 		}
 		return "signup-confirm.jsp";

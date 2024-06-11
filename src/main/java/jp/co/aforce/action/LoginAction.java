@@ -17,11 +17,11 @@ public class LoginAction extends Action {
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 		System.out.println(username);
-		
+
 		User user = dao.login(username, password);
 		if (user.getLoginErrorMsg() != null) {
 			String loginErrorMsg = user.getLoginErrorMsg();
-			
+
 			request.setAttribute("loginErrorMsg", loginErrorMsg);
 			request.setAttribute("username", username);
 			return "login.jsp";
