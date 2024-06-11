@@ -4,9 +4,9 @@
 
 <%@taglib prefix="c" uri="jakarta.tags.core"%>
 		
-		<p>${loginErrorMsg }</p>
+		<p>${loginErrorMsg}</p>
 		<form action = "Login.action" method = "post">
-			ユーザー名<input type = "text" name = "username" value = "${username }" required><br>
+			ユーザー名<input type = "text" name = "username" value = "${username}" required><br>
 			パスワード<input type = "password" name = "password" required><br> 
 			<input type = "submit" value = "ログイン">
 		</form>

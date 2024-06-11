@@ -31,13 +31,13 @@ el文の中とパスを書き換えて使用 -->
 
 <!-- ログインしているかどうかをjstlを用いて判断 -->
 <c:choose>
-	<c:when test="${user != null }">
+	<c:when test="${user != null}">
 		<p>${user.username}さんでログイン中</p>
 		<p>
 			<a href="Logout.action">ログアウト</a>
 		</p>
 	</c:when>
-	<c:when test="${user == null }">
+	<c:when test="${user == null}">
 	<p>${loginError}</p>
 		<p>
 			<a href="/ShoppingSite/views/login.jsp">ログイン</a>
