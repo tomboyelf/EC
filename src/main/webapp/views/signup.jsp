@@ -30,13 +30,13 @@
 	
 	生年月日：
 	<select name="birth-year" required>
-	<c:forEach var="y" begin="1900" end="2024"><option value="${y }">${y }年</c:forEach>
+		<c:forEach var="y" begin="1900" end="2024"><option value="${y }">${y }年</c:forEach>
 	</select>
 	<select name="birth-month" required>
-	<c:forEach var="m" begin="01" end="12"><option value="${m }">${m }月</c:forEach>
+		<c:forEach var="m" begin="01" end="12"><option value="${m }">${m }月</c:forEach>
 	</select>
 	<select name="birth-day" required>
-	<c:forEach var="d" begin="01" end="31"><option value="${d }">${d }日</c:forEach>
+		<c:forEach var="d" begin="01" end="31"><option value="${d }">${d }日</c:forEach>
 	</select><br>
 	
 	<p>メールアドレス：＠が必要</p>

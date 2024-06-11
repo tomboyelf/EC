@@ -2,13 +2,12 @@ package jp.co.aforce.beans;
 
 public class Album implements java.io.Serializable {
 	
-		private int songId;
-		private String productName;
-		private String productArtist;
-		private int productPrice;
-		private String productRelease;
-		private int productCategory;
-//		private String productAlbum;
+		private int id;
+		private int albumId;
+		private String name;
+		private int price;
+		private datetime created_at;
+		private datetime updated_at;
 		
 		public Album(int productId, String productName, String productArtist, int productPrice, String productRelease, int productCategory) {
 			this.productId=productId;
