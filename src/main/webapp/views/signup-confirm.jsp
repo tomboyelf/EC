@@ -4,14 +4,15 @@
 
 <h1>確認画面</h1>
 <form action="SignupConfirm.action" method="post">
-	ユーザーネーム:${user.username }<br>
-	パスワード:${user.password }<br>
-	苗字:${user.lastname }<br>
-	名前:${user.firstname }<br>
-	性別:${user.sex }<br>
-	生年月日:${user.birthdate }<br>
-	メールアドレス:${user.mailaddress }<br>
-	<input type="submit" value="登録">
+	ユーザーネーム:${notTrueFinalRealuser.username }<br>
+	パスワード:${notTrueFinalRealuser.password }<br>
+	苗字:${notTrueFinalRealuser.lastname }<br>
+	名前:${notTrueFinalRealuser.firstname }<br>
+	性別:${notTrueFinalRealuser.sex }<br>
+	生年月日:${notTrueFinalRealuser.birthdate }<br>
+	メールアドレス:${notTrueFinalRealuser.mailaddress }<br>
+	<input type="submit" value="確定">
 </form>
+<a href="signup.jsp">修正</a>
 
 <%@include file="html/simple-footer.html" %>

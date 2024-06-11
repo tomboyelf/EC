@@ -16,14 +16,22 @@ public class SignupConfirmAction extends Action {
 		
 		
 		
-		User user=new User();
-		user=(User) session.getAttribute("user");
 		
 		try {
 			UserDAO dao=new UserDAO();
 			
-			//lineの使い道がない
-			int line=dao.insert(user);
+			//dbへ登録
+			User notTrueFinalRealuser=new User();
+			notTrueFinalRealuser=(User) session.getAttribute("notTrueFinalRealuser");
+			
+			System.out.println("name:"+notTrueFinalRealuser.getUsername());
+			dao.insert(notTrueFinalRealuser);
+			session.removeAttribute("notTrueFinalRealuser");
+			
+			//ログイン処理
+			User user=new User();
+			user=dao.login(notTrueFinalRealuser.getUsername(), notTrueFinalRealuser.getPassword());
+			session.setAttribute("user", user);
 			
 			return "index.jsp";
 		} catch(Exception e) {
