@@ -1,6 +1,6 @@
 package jp.co.aforce.beans;
 
-import org.joda.time.DateTime;
+import java.sql.Timestamp;
 
 public class Album implements java.io.Serializable {
 
@@ -9,8 +9,11 @@ public class Album implements java.io.Serializable {
 	private String name;
 	private String artist;
 	private int traffic;
-	private DateTime createdAt;
-	private DateTime updatedAt;
+	private Timestamp createdAt;
+	private Timestamp updatedAt;
+
+	//	別テーブルのカラム
+	private String categoryName;
 
 	public int getId() {
 		return id;
@@ -53,20 +56,28 @@ public class Album implements java.io.Serializable {
 	}
 
 	// CreatedAtのゲッターとセッター
-	public DateTime getCreatedAt() {
+	public Timestamp getCreatedAt() {
 		return createdAt;
 	}
 
-	public void setCreatedAt(DateTime createdAt) {
+	public void setCreatedAt(Timestamp createdAt) {
 		this.createdAt = createdAt;
 	}
 
-	public DateTime getUpdatedAt() {
+	public Timestamp getUpdatedAt() {
 		return updatedAt;
 	}
 
-	public void setUpdatedAt(DateTime updatedAt) {
+	public void setUpdatedAt(Timestamp updatedAt) {
 		this.updatedAt = updatedAt;
+	}
+
+	public String getCategoryName() {
+		return categoryName;
+	}
+
+	public void setCategoryName(String categoryName) {
+		this.categoryName = categoryName;
 	}
 
 }

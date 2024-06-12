@@ -1,6 +1,6 @@
 package jp.co.aforce.beans;
 
-import org.joda.time.DateTime;
+import java.sql.Timestamp;
 
 public class Song implements java.io.Serializable {
 
@@ -8,10 +8,10 @@ public class Song implements java.io.Serializable {
 	private int albumId;
 	private String name;
 	private int price;
-	private DateTime createdAt;
-	private DateTime updatedAt;
+	private Timestamp createdAt;
+	private Timestamp updatedAt;
 
-	public Song(int id, int albumId, String name, int price, DateTime createdAt, DateTime updatedAt) {
+	public Song(int id, int albumId, String name, int price, Timestamp createdAt, Timestamp updatedAt) {
 		this.id = id;
 		this.albumId = albumId;
 		this.name = name;
@@ -55,20 +55,19 @@ public class Song implements java.io.Serializable {
 		this.price = price;
 	}
 
-	public DateTime getCreatedAt() {
+	public Timestamp getCreatedAt() {
 		return createdAt;
 	}
 
-	public void setCreatedAt(DateTime createdAt) {
+	public void setCreatedAt(Timestamp createdAt) {
 		this.createdAt = createdAt;
 	}
 
-	// UpdatedAtのゲッターとセッター
-	public DateTime getUpdatedAt() {
+	public Timestamp getUpdatedAt() {
 		return updatedAt;
 	}
 
-	public void setUpdatedAt(DateTime updatedAt) {
+	public void setUpdatedAt(Timestamp updatedAt) {
 		this.updatedAt = updatedAt;
 	}
 

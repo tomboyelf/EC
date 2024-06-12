@@ -13,10 +13,17 @@
 	<a href="/ShoppingSite/views/index.jsp">サイトのロゴ</a>
 </p>
 
-<form action=".action" method="post">
-	<input type="text">
+<form action="Search.action" method="post">
+	<input type="text" name="keyword">
 	<input type="submit" value="検索">
 </form>
+
+<%-- <%
+String keyword=request.getParameter("keyword");
+if(keyword != null){
+	request.setAttribute("keyword", keyword);
+}
+%> --%>
 
 
 <!-- 管理者アカウントでログインした際に、ヘッダーに管理者画面へのリンクを張る場合のコード
@@ -54,9 +61,9 @@ el文の中とパスを書き換えて使用 -->
 
 <nav>
 	<ul>
-		<li><a href=".action">新着</a>
-		<li><a href=".action">ランキング</a>
-		<li><a href=".action">ジャンル</a>
+		<li><a href="Search.action?searchId=orderedByDate">新着</a>
+		<li><a href="Search.action?searchId=orderedByTraffic">ランキング</a>
+		<li><a href="Search.action?searchId=categoryPage">ジャンル</a>
 	</ul>
 </nav>
 
