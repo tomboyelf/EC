@@ -2,7 +2,7 @@ package jp.co.aforce.beans;
 
 import java.sql.Timestamp;
 
-public class Album implements java.io.Serializable {
+public class Album implements java.io.Serializable, Comparable<Album> {
 
 	private int id;
 	private int categoryId;
@@ -55,7 +55,6 @@ public class Album implements java.io.Serializable {
 		this.traffic = traffic;
 	}
 
-	// CreatedAtのゲッターとセッター
 	public Timestamp getCreatedAt() {
 		return createdAt;
 	}
@@ -78,6 +77,12 @@ public class Album implements java.io.Serializable {
 
 	public void setCategoryName(String categoryName) {
 		this.categoryName = categoryName;
+	}
+
+	@Override
+	public int compareTo(Album o) {
+		// TODO 自動生成されたメソッド・スタブ
+		return 0;
 	}
 
 }

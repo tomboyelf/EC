@@ -7,6 +7,8 @@ public class Song implements java.io.Serializable {
 	private int id;
 	private int albumId;
 	private String name;
+	private String albumName;
+	private String artist;
 	private int price;
 	private Timestamp createdAt;
 	private Timestamp updatedAt;
@@ -45,6 +47,22 @@ public class Song implements java.io.Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public String getAlbumName() {
+		return albumName;
+	}
+	
+	public void setAlbumName(String albumName) {
+		this.albumName = albumName;
+	}
+	
+	public String getArtist() {
+		return artist;
+	}
+	
+	public void setArtist(String artist) {
+		this.artist = artist;
 	}
 
 	public int getPrice() {

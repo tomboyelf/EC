@@ -68,16 +68,6 @@ public class SignupAction extends Action {
 			System.out.println("name:" + notTrueFinalRealuser.getUsername());
 			session.setAttribute("notTrueFinalRealuser", notTrueFinalRealuser);
 		}
-		return "signup-confirm.jsp";
-
-		//		try {
-		//			UserDAO dao=new UserDAO();
-		//			int line=dao.insert(user);
-		//			return "index.jsp";
-		//		} catch(Exception e) {
-		//			e.printStackTrace();
-		//			return "signup.jsp";
-		//		}
+		return "confirm.jsp";
 	}
-
 }

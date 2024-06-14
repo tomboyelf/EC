@@ -1,7 +1,5 @@
 package jp.co.aforce.action;
 
-
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -21,7 +19,7 @@ public class SignupConfirmAction extends Action {
 			//仮登録情報の取得
 			User ultraFinalUser = new User();
 			ultraFinalUser = (User) session.getAttribute("notTrueFinalRealuser");
-			
+
 			//登録
 			dao.insert(ultraFinalUser);
 			session.removeAttribute("notTrueFinalRealuser");

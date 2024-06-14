@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%-- <%@ page import="java.util.ArrayList"%>	
+<%@ page import="java.util.List"%>	 --%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,18 +15,10 @@
 	<a href="/ShoppingSite/views/index.jsp">サイトのロゴ</a>
 </p>
 
-<form action="Search.action" method="post">
+<form action="SearchAlbum.action" method="post">
 	<input type="text" name="keyword">
 	<input type="submit" value="検索">
 </form>
-
-<%-- <%
-String keyword=request.getParameter("keyword");
-if(keyword != null){
-	request.setAttribute("keyword", keyword);
-}
-%> --%>
-
 
 <!-- 管理者アカウントでログインした際に、ヘッダーに管理者画面へのリンクを張る場合のコード
 el文の中とパスを書き換えて使用 -->
@@ -36,10 +30,12 @@ el文の中とパスを書き換えて使用 -->
 
 
 
-<!-- ログインしているかどうかをjstlを用いて判断 -->
 <c:choose>
 	<c:when test="${user != null}">
 		<p>${user.username}さんでログイン中</p>
+		<p>
+			<a href="ShowCart.action">カートを見る</a>
+		</p>
 		<p>
 			<a href="Logout.action">ログアウト</a>
 		</p>
@@ -61,9 +57,9 @@ el文の中とパスを書き換えて使用 -->
 
 <nav>
 	<ul>
-		<li><a href="Search.action?searchId=orderedByDate">新着</a>
-		<li><a href="Search.action?searchId=orderedByTraffic">ランキング</a>
-		<li><a href="Search.action?searchId=categoryPage">ジャンル</a>
+		<li><a href="SearchAlbum.action?searchId=orderedByDate">新着</a>
+		<li><a href="SearchAlbum.action?searchId=orderedByTraffic">ランキング</a>
+		<li><a href="SearchAlbum.action?searchId=categoryPage">ジャンル</a>
 	</ul>
 </nav>
 

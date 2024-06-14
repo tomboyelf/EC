@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@include file="html/simple-header.html" %>
+<%@include file="simple-header.jsp" %>
 
 <%@taglib prefix="c" uri="jakarta.tags.core"%>
 
@@ -44,4 +44,4 @@
 	<input type="submit" value="確認画面へ">
 </form>
 
-<%@include file="html/simple-footer.html" %>
+<%@include file="simple-footer.jsp" %>
