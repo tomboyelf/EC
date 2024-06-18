@@ -1,7 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%-- <%@ page import="java.util.ArrayList"%>	
-<%@ page import="java.util.List"%>	 --%>
+<%@ page import="java.util.ArrayList"%>	
+<%@ page import="java.util.List"%>
+<%@ page import="jp.co.aforce.beans.Master"%>
+<%@ page import="jp.co.aforce.dao.ProductDAO"%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -20,13 +23,11 @@
 	<input type="submit" value="検索">
 </form>
 
-<!-- 管理者アカウントでログインした際に、ヘッダーに管理者画面へのリンクを張る場合のコード
-el文の中とパスを書き換えて使用 -->
-<%-- <c:if test="${user.id == 1}">
+<c:if test="${user.id == 1}">
 	<p>
-		<a href="/ShoppingSite/jsp/views/.jsp">管理者画面へ</a>
+		<a href="/ShoppingSite/views/admin-index.jsp">管理者画面へ</a>
 	</p>
-</c:if> --%>
+</c:if>
 
 
 
@@ -35,6 +36,12 @@ el文の中とパスを書き換えて使用 -->
 		<p>${user.username}さんでログイン中</p>
 		<p>
 			<a href="ShowCart.action">カートを見る</a>
+		</p>
+		<p>
+			<a href="Mypage.action">Myページへ</a>
+		</p>
+		<p>
+			<a href="ShowPurchaseHistory.action">購入履歴を見る</a>
 		</p>
 		<p>
 			<a href="Logout.action">ログアウト</a>

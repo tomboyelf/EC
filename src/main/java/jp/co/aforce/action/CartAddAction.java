@@ -1,15 +1,14 @@
 package jp.co.aforce.action;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import jp.co.aforce.beans.Cart;
 import jp.co.aforce.beans.User;
 import jp.co.aforce.dao.ProductDAO;
 import jp.co.aforce.tool.Action;
+import jp.co.aforce.tool.Message;
 
 public class CartAddAction extends Action {
 	@SuppressWarnings("unchecked")
@@ -18,52 +17,48 @@ public class CartAddAction extends Action {
 		HttpSession session = request.getSession();
 		ProductDAO dao = new ProductDAO();
 		User user = new User();
+		Message msg = new Message();
 		user = (User) session.getAttribute("user");
+
+		//		ログインチェック、鰹節
+		if (user == null) {
+			//		ログインを促す
+			return "login.jsp";
+		}
 
 		//		ログイン時に取ってきたカート状況および購入履歴
 		List<Integer> inCartList = (List<Integer>) session.getAttribute("inCartList");
 		List<Integer> purchaseHistoryList = (List<Integer>) session.getAttribute("purchaseHistoryList");
 
 		//		値段がクリックされたら
-		if (user.getId() != 0) {
-			int songId = Integer.parseInt(request.getParameter("addCartId"));
-			//			カートにあるか判断
-			if (inCartList.contains(songId)) {
-				//				もうカートにある
-				System.out.println("すでにカートにある");
-				return "song.jsp";
-			}
-			//			購入済みか判断
-			if (purchaseHistoryList.contains(songId)) {
-				//				購入済み
-				System.out.println("購入済み");
-				return "song.jsp";
-			}
-			//			リクエスト元のuriでカート追加か購入か判断
-			int line = dao.getSongIntoCart(user.getId(), songId);
-			if (line > 0) {
-				//					カート追加成功
-				System.out.println("カート追加成功");
-				
-//				カート取得処理
-				inCartList = dao.getInCartList(user.getId());
-				session.setAttribute("inCartList", inCartList);
-				List<Cart> cartInfo = new ArrayList<>();
-				for(Integer list : inCartList) {
-					Cart cart = dao.getCartInfo(list);
-					cartInfo.add(cart);
-				}
-				request.setAttribute("cartInfo", cartInfo);
-//				できればページにとどまりたい
-//				ページ遷移ではなく、メッセージ表示にしたい。とても。
-				return "cart.jsp";
-			} else {
-				//					追加失敗、原因不明
-				System.out.println("カート追加失敗");
-				return "song.jsp";
-			}
+		int songId = Integer.parseInt(request.getParameter("addCartId"));
+
+		//		ログインしてたらカートに入っている商品と購入済みの商品をはじく
+		//			カートにあるか判断
+		if (inCartList.contains(songId)) {
+			request.setAttribute("purchaseErrorMsg", msg.getPurchaseErrorMsg(0));
+			return "song.jsp";
 		}
-		//		ログインを促す
-		return "login.jsp";
+		//			購入済みか判断
+		if (purchaseHistoryList.contains(songId)) {
+			request.setAttribute("purchaseErrorMsg", msg.getPurchaseErrorMsg(1));
+			return "song.jsp";
+		}
+
+		//		↑↑↑↑
+		//		ここまで鰹節
+
+		int line = dao.getSongIntoCart(user.getId(), songId);
+		if (line > 0) {
+			//				追加後の新しいカートを取得
+			inCartList = dao.getInCartList(user.getId());
+			session.setAttribute("inCartList", inCartList);
+			request.setAttribute("completeMsg", msg.getCompleteMsg(2));
+			return "song.jsp";
+		} else {
+			//					追加失敗、原因不明
+			request.setAttribute("purchaseErrorMsg", msg.getPurchaseErrorMsg(4));
+			return "song.jsp";
+		}
 	}
 }

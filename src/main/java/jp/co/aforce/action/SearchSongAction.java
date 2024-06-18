@@ -22,8 +22,8 @@ public class SearchSongAction extends Action {
 		if (request.getParameter("searchSongId") != null) {
 			int albumIdToSearchSongs = Integer.parseInt(request.getParameter("searchSongId"));
 			//			アルバムに入ってる曲取得
-			List<Song> songList_albumId = dao.getSongswithAlbumId(albumIdToSearchSongs);
-			request.setAttribute("songList_albumId", songList_albumId);
+			List<Song> songsInAlbum = dao.getSongswithAlbumId(albumIdToSearchSongs);
+			session.setAttribute("songsInAlbum", songsInAlbum);
 			//			ランキング更新して
 			dao.updateAlbumTraffic(albumIdToSearchSongs);
 
@@ -33,8 +33,8 @@ public class SearchSongAction extends Action {
 				user = (User) session.getAttribute("user");
 				dao.updateUserAlbumStatus(user.getId(), albumIdToSearchSongs);
 				//				同時に閲覧履歴をセッションに保存
-				List<Album> albumList_hisotry = dao.getAlbumsClicked(user.getId());
-				session.setAttribute("albumList_hisotry", albumList_hisotry);
+				List<Album> albumListHisotry = dao.getAlbumsClicked(user.getId());
+				session.setAttribute("albumListHisotry", albumListHisotry);
 			}
 		}
 		return "song.jsp";

@@ -3,19 +3,19 @@
 <%@include file="header.jsp"%>
 
 <c:choose>
-	<c:when test="${albumList_date != null}">
+	<c:when test="${albumListDate != null}">
 		<h2>新着</h2>
 	</c:when>
-	<c:when test="${albumList_traffic != null}">
+	<c:when test="${albumListTraffic != null}">
 		<h2>ランキング</h2>
 	</c:when>
-	<c:when test="${albumList_categoryOrderedByDate != null}">
-		<c:forEach var="albumList" items="${albumList_categoryOrderedByDate}"
+	<c:when test="${albumListInCategoryOrderedByDate != null}">
+		<c:forEach var="albumList" items="${albumListInCategoryOrderedByDate}"
 			begin="0" end="0">
 			<h2>${albumList.categoryName}</h2>
 		</c:forEach>
 	</c:when>
-	<c:when test="${songList_keyword != null}">
+	<c:when test="${songListKeyword != null}">
 		<h2>「${keyword}」の検索結果</h2>
 	</c:when>
 	<c:when test="${categoryList != null}">
@@ -174,9 +174,9 @@
 <!-- カテゴリー別一覧出力 -->
 <!-- カテゴリー別新着 -->
 <c:if
-	test="${albumList_categoryOrderedByDate !=  null && albumList_categoryOrderedByDate.size() != 0}">
+	test="${albumListInCategoryOrderedByDate !=  null && albumListInCategoryOrderedByDate.size() != 0}">
 	<h3>新着</h3>
-	<c:forEach var="albumList" items="${albumList_categoryOrderedByDate}"
+	<c:forEach var="albumList" items="${albumListInCategoryOrderedByDate}"
 		begin="0" end="12">
 		<a href="SearchSong.action?searchSongId=${albumList.id}">
 			<div>
@@ -192,10 +192,10 @@
 
 <!-- カテゴリー別ランキング -->
 <c:if
-	test="${albumList_categoryOrderedByTraffic !=  null && albumList_categoryOrderedByTraffic.size() != 0}">
+	test="${albumListInCategoryOrderedByTraffic !=  null && albumListInCategoryOrderedByTraffic.size() != 0}">
 	<h3>ランキング</h3>
 	<c:forEach var="albumList"
-		items="${albumList_categoryOrderedByTraffic}" begin="0" end="12">
+		items="${albumListInCategoryOrderedByTraffic}" begin="0" end="12">
 		<a href="SearchSong.action?searchSongId=${albumList.id}">
 			<div>
 				<img src="../image/album/${albumList.id}.jpg" alt="product image">
@@ -209,27 +209,32 @@
 </c:if>
 
 <!-- 検索結果一覧出力 -->
-<c:forEach var="songList" items="${songList_keyword}" begin="0" end="12">
-	<a href="SearchSong.action?searchSongId=${songList.albumId}">
-		<div>
-			<img src="../image/album/${songList.albumId}.jpg" alt="product image">
-			<p>${songList.name}</p>
-			<p>${songList.albumName}</p>
-			<br>
-			<p>${songList.artist}</p>
-			<br>
-		</div>
-	</a>
-</c:forEach>
+<c:if test="${songListKeyword !=  null && songListKeyword.size() != 0}">
+	<c:forEach var="songList" items="${songListKeyword}" begin="0" end="12">
+		<a href="SearchSong.action?searchSongId=${songList.albumId}">
+			<div>
+				<img src="../image/album/${songList.albumId}.jpg"
+					alt="product image">
+				<p>${songList.name}</p>
+				<p>${songList.albumName}</p>
+				<br>
+				<p>${songList.artist}</p>
+				<br>
+			</div>
+		</a>
+	</c:forEach>
+</c:if>
 
 <!-- カテゴリー一覧出力 -->
-<c:forEach var="categoryList" items="${categoryList}">
-	<a href="SearchAlbum.action?categoryId=${categoryList.id}">
-		<div>
-			<img src="../image/category/${categoryList.id}.jpg"
-				alt="category image">
-			<p>${categoryList.name}</p>
-		</div>
-	</a>
-</c:forEach>
+<c:if test="${categoryList !=  null && categoryList.size() != 0}">
+	<c:forEach var="categoryList" items="${categoryList}">
+		<a href="SearchAlbum.action?categoryId=${categoryList.id}">
+			<div>
+				<img src="../image/category/${categoryList.imgName}"
+					alt="category image">
+				<p>${categoryList.name}</p>
+			</div>
+		</a>
+	</c:forEach>
+</c:if>
 <%@include file="footer.jsp"%>

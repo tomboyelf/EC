@@ -4,6 +4,7 @@ import java.util.List;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import jp.co.aforce.beans.Album;
 import jp.co.aforce.beans.Category;
 import jp.co.aforce.beans.Song;
@@ -14,27 +15,31 @@ import jp.co.aforce.tool.Sort;
 public class SearchAlbumAction extends Action {
 	public String execute(
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
+		
+		HttpSession session = request.getSession();
+		session.removeAttribute("songsInAlbum");
+		
 		ProductDAO dao = new ProductDAO();
 
 		if (request.getParameter("searchId") != null) {
 			//		新着一覧取得
 			if (request.getParameter("searchId").equals("orderedByDate")) {
 				//				新着全部
-				List<Album> albumAndSingleList_date = dao.getAlbumAndSingleOrderedByDate();
-				request.setAttribute("albumAndSingleList_date", albumAndSingleList_date);
+				List<Album> albumAndSingleListDate = dao.getAlbumAndSingleOrderedByDate();
+				request.setAttribute("albumAndSingleListDate", albumAndSingleListDate);
 				//				新着のアルバムリスト、今週と先週
-				List<Album> albumList_date = dao.getAlbumsOrderedByDate();
-				List<Album> albumListWeekly = Sort.getAlbumListWeekly(albumList_date);
-				List<Album> albumListLastWeekly = Sort.getAlbumListLastWeekly(albumList_date);
-				request.setAttribute("albumList_date", albumList_date);
+				List<Album> albumListDate = dao.getAlbumsOrderedByDate();
+				List<Album> albumListWeekly = Sort.getAlbumListWeekly(albumListDate);
+				List<Album> albumListLastWeekly = Sort.getAlbumListLastWeekly(albumListDate);
+				request.setAttribute("albumListDate", albumListDate);
 				request.setAttribute("albumListWeekly", albumListWeekly);
 				request.setAttribute("albumListLastWeekly", albumListLastWeekly);
 
 				//				新着のシングルリスト、今週と先週
-				List<Album> singleList_date = dao.getSinglesOrderedByDate();
-				List<Album> singleListWeekly = Sort.getAlbumListWeekly(singleList_date);
-				List<Album> singleListLastWeekly = Sort.getAlbumListLastWeekly(singleList_date);
-				request.setAttribute("singleList_date", singleList_date);
+				List<Album> singleListDate = dao.getSinglesOrderedByDate();
+				List<Album> singleListWeekly = Sort.getAlbumListWeekly(singleListDate);
+				List<Album> singleListLastWeekly = Sort.getAlbumListLastWeekly(singleListDate);
+				request.setAttribute("singleListDate", singleListDate);
 				request.setAttribute("singleListWeekly", singleListWeekly);
 				request.setAttribute("singleListLastWeekly", singleListLastWeekly);
 			}
@@ -42,26 +47,26 @@ public class SearchAlbumAction extends Action {
 			//		ランキング一覧取得
 			if (request.getParameter("searchId").equals("orderedByTraffic")) {
 				//				ランキング全部
-				List<Album> albumAndSingleList_traffic = dao.getAlbumAndSingleOrderedByTraffic();
-				request.setAttribute("albumAndSingleList_traffic", albumAndSingleList_traffic);
+				List<Album> albumAndSingleListTraffic = dao.getAlbumAndSingleOrderedByTraffic();
+				request.setAttribute("albumAndSingleListTraffic", albumAndSingleListTraffic);
 				//				ランキングのアルバムリスト、今日と今週と今月
-				List<Album> albumList_traffic = dao.getAlbumsOrderedByTraffic();
-				List<Album> albumListDaily = Sort.getAlbumListDaily(albumList_traffic);
-				List<Album> albumListWeekly = Sort.getAlbumListWeekly(albumList_traffic);
-				List<Album> albumListMonthly = Sort.getAlbumListMonthly(albumList_traffic);
-				request.setAttribute("albumList_traffic", albumList_traffic);
+				List<Album> albumListTraffic = dao.getAlbumsOrderedByTraffic();
+				List<Album> albumListDaily = Sort.getAlbumListDaily(albumListTraffic);
+				List<Album> albumListWeekly = Sort.getAlbumListWeekly(albumListTraffic);
+				List<Album> albumListMonthly = Sort.getAlbumListMonthly(albumListTraffic);
+				request.setAttribute("albumListTraffic", albumListTraffic);
 				request.setAttribute("albumTrafficListDaily", albumListDaily);
 				request.setAttribute("albumTrafficListWeekly", albumListWeekly);
 				request.setAttribute("albumTrafficListMonthly", albumListMonthly);
 				//				ランキングのアルバムリスト、今日と今週と今月
-				List<Album> singleList_traffic = dao.getSinglesOrderedByTraffic();
-				List<Album> singleListDaily = Sort.getAlbumListDaily(singleList_traffic);
-				List<Album> singleListWeekly = Sort.getAlbumListWeekly(singleList_traffic);
-				List<Album> singleListMonthly = Sort.getAlbumListMonthly(singleList_traffic);
-				request.setAttribute("singleList_traffic", singleList_traffic);
+				List<Album> singleListTraffic = dao.getSinglesOrderedByTraffic();
+				List<Album> singleListDaily = Sort.getAlbumListDaily(singleListTraffic);
+				List<Album> singleListWeekly = Sort.getAlbumListWeekly(singleListTraffic);
+				List<Album> singleListMonthly = Sort.getAlbumListMonthly(singleListTraffic);
+				request.setAttribute("singleListTraffic", singleListTraffic);
 				request.setAttribute("singleTrafficListDaily", singleListDaily);
 				request.setAttribute("singleTrafficListWeekly", singleListWeekly);
-				request.setAttribute("singleTrafficListsMonthly", singleListMonthly);
+				request.setAttribute("singleTrafficListMonthly", singleListMonthly);
 			}
 
 			//		これだけアルバムではなくカテゴリーの取得
@@ -78,17 +83,17 @@ public class SearchAlbumAction extends Action {
 			//			リクエスト付与した理由
 			//			→結果画面にテキスト表示させるため
 			request.setAttribute("keyword", keyword);
-			List<Song> songList_keyword = dao.getAlbumsSearchedWithKeyword(keyword);
-			request.setAttribute("songList_keyword", songList_keyword);
+			List<Song> songListKeyword = dao.getAlbumsSearchedWithKeyword(keyword);
+			request.setAttribute("songListKeyword", songListKeyword);
 		}
 
 		//		カテゴリー別一覧取得
 		if (request.getParameter("categoryId") != null) {
 			int categoryId = Integer.parseInt(request.getParameter("categoryId"));
-			List<Album> albumList_categoryOrderedByDate = dao.getAlbumsSortedByCategoryOrderedByDate(categoryId);
-			request.setAttribute("albumList_categoryOrderedByDate", albumList_categoryOrderedByDate);
-			List<Album> albumList_categoryOrderedByTraffic = dao.getAlbumsSortedByCategoryOrderedByTraffic(categoryId);
-			request.setAttribute("albumList_categoryOrderedByTraffic", albumList_categoryOrderedByTraffic);
+			List<Album> albumListInCategoryOrderedByDate = dao.getAlbumsSortedByCategoryOrderedByDate(categoryId);
+			request.setAttribute("albumListInCategoryOrderedByDate", albumListInCategoryOrderedByDate);
+			List<Album> albumListInCategoryOrderedByTraffic = dao.getAlbumsSortedByCategoryOrderedByTraffic(categoryId);
+			request.setAttribute("albumListInCategoryOrderedByTraffic", albumListInCategoryOrderedByTraffic);
 		}
 
 		return "album.jsp";

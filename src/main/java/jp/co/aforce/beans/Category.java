@@ -6,6 +6,7 @@ public class Category implements java.io.Serializable {
 
 	private int id;
 	private String name;
+	private String imgName;
 	private Timestamp createdAt;
 	private Timestamp updatedAt;
 
@@ -23,6 +24,14 @@ public class Category implements java.io.Serializable {
 
 	    public void setName(String name) {
 	        this.name = name;
+	    }
+	    
+	    public String getImgName() {
+	    	return imgName;
+	    }
+	    
+	    public void setImgName(String imgName) {
+	    	this.imgName = imgName;
 	    }
 
 	    public Timestamp getCreatedAt() {

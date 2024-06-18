@@ -7,6 +7,7 @@ public class Album implements java.io.Serializable, Comparable<Album> {
 	private int id;
 	private int categoryId;
 	private String name;
+	private String albumImgName;
 	private String artist;
 	private int traffic;
 	private Timestamp createdAt;
@@ -14,6 +15,7 @@ public class Album implements java.io.Serializable, Comparable<Album> {
 
 	//	別テーブルのカラム
 	private String categoryName;
+	private String categoryImgName;
 
 	public int getId() {
 		return id;
@@ -78,6 +80,24 @@ public class Album implements java.io.Serializable, Comparable<Album> {
 	public void setCategoryName(String categoryName) {
 		this.categoryName = categoryName;
 	}
+	
+	public String getAlbumImgName() {
+		return albumImgName;
+	}
+	
+	public void setAlbumImgName(String albumImgName) {
+		this.albumImgName = albumImgName;
+	}
+	
+	public String getCategoryImgName() {
+		return categoryImgName;
+	}
+	
+	public void setCategoryImgName(String categoryImgName) {
+		this.categoryImgName = categoryImgName;
+	}
+	
+	
 
 	@Override
 	public int compareTo(Album o) {

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Valid {
-	public List<Integer> validCheck(String username, String password, String lastname, String firstname, String mail) {
+	public static List<Integer> validCheck(String username, String password, String lastname, String firstname, String mail) {
 		List<Integer> errorMessageList = new ArrayList<>();
 		//		ユーザーネームチェック
 		if (!username.matches("^[a-zA-Z0-9]{5,}$")) {
@@ -29,6 +29,30 @@ public class Valid {
 			errorMessageList.add(6);
 		}
 
+		return errorMessageList;
+	}
+	
+	public static List<Integer> validCheckForUsername(String username) {
+		List<Integer> errorMessageList = new ArrayList<>();
+		if (!username.matches("^[a-zA-Z0-9]{5,}$")) {
+			errorMessageList.add(2);
+		}
+		return errorMessageList;
+	}
+	
+	public static List<Integer> validCheckForPassword(String password) {
+		List<Integer> errorMessageList = new ArrayList<>();
+		if (!password.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[a-zA-Z0-9]{5,}$")) {
+			errorMessageList.add(3);
+		}
+		return errorMessageList;
+	}
+
+	public static List<Integer> validCheckForMailaddress(String mailaddress) {
+		List<Integer> errorMessageList = new ArrayList<>();
+		if (!mailaddress.matches("^.*@.*$")) {
+			errorMessageList.add(6);
+		}
 		return errorMessageList;
 	}
 

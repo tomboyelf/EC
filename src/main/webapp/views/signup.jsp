@@ -4,6 +4,7 @@
 
 <%@taglib prefix="c" uri="jakarta.tags.core"%>
 
+
 <h1>登録画面</h1>
 <form action="Signup.action" method="post">
 	<p>ユーザーネーム：英数字のみかつ5文字以上</p>
@@ -43,5 +44,6 @@
 	メールアドレス<input type="text" name="mailaddress" value="${notTrueFinalRealuser.mailaddress}" required>${signupErrorMsg006}<br>
 	<input type="submit" value="確認画面へ">
 </form>
+
 
 <%@include file="simple-footer.jsp" %>

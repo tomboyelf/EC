@@ -4,15 +4,15 @@
 
 <!-- 新着一覧出力 -->
 <h2>新着</h2>
-<c:forEach var="albumList_date" items="${albumAndSingleList_date}"
+<c:forEach var="albumListDate" items="${albumAndSingleListDate}"
 	begin="0" end="8">
-	<a href="SearchSong.action?searchSongId=${albumList_date.id}">
+	<a href="SearchSong.action?searchSongId=${albumListDate.id}">
 		<div>
-			<img src="../image/album/${albumList_date.id}.jpg"
+			<img src="../image/album/${albumListDate.id}.jpg"
 				alt="product image">
-			<p>${albumList_date.name}</p>
+			<p>${albumListDate.name}</p>
 			<br>
-			<p>${albumList_date.artist}</p>
+			<p>${albumListDate.artist}</p>
 			<br>
 		</div>
 	</a>
@@ -21,32 +21,32 @@
 
 <!-- ランキング一覧出力 -->
 <h2>ランキング</h2>
-<c:forEach var="albumList_traffic" items="${albumAndSingleList_traffic}"
+<c:forEach var="albumListTraffic" items="${albumAndSingleListTraffic}"
 	begin="0" end="8">
-	<a href="SearchSong.action?searchSongId=${albumList_traffic.id}">
+	<a href="SearchSong.action?searchSongId=${albumListTraffic.id}">
 		<div>
-			<img src="../image/album/${albumList_traffic.id}.jpg"
+			<img src="../image/album/${albumListTraffic.id}.jpg"
 				alt="product image">
-			<p>${albumList_traffic.name}</p>
+			<p>${albumListTraffic.name}</p>
 			<br>
-			<p>${albumList_traffic.artist}</p>
+			<p>${albumListTraffic.artist}</p>
 			<br>
 		</div>
 	</a>
 </c:forEach>
 
 <!-- 閲覧履歴出力 -->
-<c:if test="${albumList_hisotry != null && user != null}">
+<c:if test="${albumListHisotry != null && user != null}">
 	<h2>閲覧履歴</h2>
-	<c:forEach var="albumList_hisotry" items="${albumList_hisotry}"
+	<c:forEach var="albumListHisotry" items="${albumListHisotry}"
 		begin="0" end="4">
-		<a href="SearchSong.action?searchSongId=${albumList_hisotry.id}">
+		<a href="SearchSong.action?searchSongId=${albumListHisotry.id}">
 			<div>
-				<img src="../image/album/${albumList_hisotry.id}.jpg"
+				<img src="../image/album/${albumListHisotry.id}.jpg"
 					alt="product image">
-				<p>${albumList_hisotry.name}</p>
+				<p>${albumListHisotry.name}</p>
 				<br>
-				<p>${albumList_hisotry.artist}</p>
+				<p>${albumListHisotry.artist}</p>
 				<br>
 			</div>
 		</a>

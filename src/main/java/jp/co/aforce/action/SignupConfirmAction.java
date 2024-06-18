@@ -6,12 +6,14 @@ import jakarta.servlet.http.HttpSession;
 import jp.co.aforce.beans.User;
 import jp.co.aforce.dao.UserDAO;
 import jp.co.aforce.tool.Action;
+import jp.co.aforce.tool.Message;
 
 public class SignupConfirmAction extends Action {
 	public String execute(
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		HttpSession session = request.getSession();
 		response.setContentType("text/html; charset=UTF-8");
+		Message msg = new Message();
 
 		try {
 			UserDAO dao = new UserDAO();
@@ -28,8 +30,9 @@ public class SignupConfirmAction extends Action {
 			User user = new User();
 			user = dao.login(ultraFinalUser.getUsername(), ultraFinalUser.getPassword());
 			session.setAttribute("user", user);
-
-			return "index.jsp";
+			
+			request.setAttribute("completeMsg", msg.getCompleteMsg(0));
+			return "message.jsp";
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "signup.jsp";

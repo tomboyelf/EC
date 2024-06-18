@@ -25,10 +25,10 @@ public class IndexFilter implements jakarta.servlet.Filter {
 
 		ProductDAO dao = new ProductDAO();
 		try {
-			List<Album> albumAndSingleList_date = dao.getAlbumAndSingleOrderedByDate();
-			request.setAttribute("albumAndSingleList_date", albumAndSingleList_date);
-			List<Album> albumAndSingleList_traffic = dao.getAlbumAndSingleOrderedByTraffic();
-			request.setAttribute("albumAndSingleList_traffic", albumAndSingleList_traffic);
+			List<Album> albumAndSingleListDate = dao.getAlbumAndSingleOrderedByDate();
+			request.setAttribute("albumAndSingleListDate", albumAndSingleListDate);
+			List<Album> albumAndSingleListTraffic = dao.getAlbumAndSingleOrderedByTraffic();
+			request.setAttribute("albumAndSingleListTraffic", albumAndSingleListTraffic);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -6,8 +6,11 @@ public class Song implements java.io.Serializable {
 
 	private int id;
 	private int albumId;
+	private String categoryName;
+	private int categoryId;
 	private String name;
 	private String albumName;
+	private String albumImgName;
 	private String artist;
 	private int price;
 	private Timestamp createdAt;
@@ -40,6 +43,23 @@ public class Song implements java.io.Serializable {
 	public void setAlbumId(int albumId) {
 		this.albumId = albumId;
 	}
+	
+	
+	public String getCategoryName() {
+		return categoryName;
+	}
+	
+	public void setCategoryName(String categoryName) {
+		this.categoryName = categoryName;
+	}
+	
+	public int getCategoryId() {
+		return categoryId;
+	}
+	
+	public void setCategoryId(int categoryId) {
+		this.categoryId = categoryId;
+	}
 
 	public String getName() {
 		return name;
@@ -55,6 +75,14 @@ public class Song implements java.io.Serializable {
 	
 	public void setAlbumName(String albumName) {
 		this.albumName = albumName;
+	}
+	
+	public String getAlbumImgName() {
+		return albumImgName;
+	}
+	
+	public void setAlbumImgName(String albumImgName) {
+		this.albumImgName = albumImgName;
 	}
 	
 	public String getArtist() {

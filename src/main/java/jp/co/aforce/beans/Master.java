@@ -1,6 +1,8 @@
 package jp.co.aforce.beans;
 
-public class Cart implements java.io.Serializable {
+import java.sql.Timestamp;
+
+public class Master implements java.io.Serializable {
 
 	private int albumId;
 	private int songId;
@@ -8,6 +10,7 @@ public class Cart implements java.io.Serializable {
 	private String albumName;
 	private String songName;
 	private String artist;
+	private Timestamp updatedAt;
 
 	public int getAlbumId() {
         return albumId;
@@ -57,5 +60,13 @@ public class Cart implements java.io.Serializable {
     public void setArtist(String artist) {
         this.artist = artist;
     }
+    
+    public Timestamp getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(Timestamp updatedAt) {
+		this.updatedAt = updatedAt;
+	}
 
 }

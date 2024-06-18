@@ -10,5 +10,5 @@
 
 <body>
 	<p>header</p>
-	<a href="index.jsp">ホームへ</a>
+	<a href="${pageContext.request.contextPath}/views/index.jsp">ホームへ</a>
 	<hr>

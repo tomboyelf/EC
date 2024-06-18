@@ -5,26 +5,63 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import jp.co.aforce.beans.Album;
-import jp.co.aforce.beans.Cart;
 import jp.co.aforce.beans.Category;
+import jp.co.aforce.beans.Master;
 import jp.co.aforce.beans.Song;
 
 public class ProductDAO extends DAO {
+	
+//	指定カテゴリ取得
+	public Category getSpecificCategory(int categoryId) throws Exception {
+		Category category = new Category();
+		try (Connection con = getConnection();
+				PreparedStatement st = con.prepareStatement(
+						"select * from categories where id = ?")) {
+			st.setInt(1, categoryId);
+			try (ResultSet rs = st.executeQuery()) {
+				while (rs.next()) {
+					category.setId(rs.getInt("id"));
+					category.setName(rs.getString("category_name"));
+					category.setImgName(rs.getString("img_name"));
+				}
+			}
+		}
+		return category;
+	}
+	
+//	指定アルバム取得
+	public Album getSpecificAlbum(int albumId) throws Exception {
+		Album album = new Album();
+		try (Connection con = getConnection();
+				PreparedStatement st = con.prepareStatement(
+						"select * from master_view where album_id = ?")) {
+			st.setInt(1, albumId);
+			try (ResultSet rs = st.executeQuery()) {
+				while (rs.next()) {
+					album.setId(rs.getInt("album_id"));
+					album.setCategoryName(rs.getString("category_name"));
+					album.setAlbumImgName(rs.getString("album_simg_name"));
+				}
+			}
+		}
+		return album;
+	}
 
 	//新着全部
 	public List<Album> getAlbumAndSingleOrderedByDate() throws Exception {
 		List<Album> list = new ArrayList<>();
 		try (Connection con = getConnection();
 				PreparedStatement st = con.prepareStatement(
-						"SELECT id, album_name, artist, created_at FROM albums ORDER BY CREATED_AT desc")) {
+						"SELECT id, category_id, album_name, artist, created_at FROM albums ORDER BY CREATED_AT desc")) {
 			try (ResultSet rs = st.executeQuery()) {
 				while (rs.next()) {
 					Album album = new Album();
 					album.setId(rs.getInt("id"));
+					album.setCategoryId(rs.getInt("category_id"));
 					album.setName(rs.getString("album_name"));
 					album.setArtist(rs.getString("artist"));
 					list.add(album);
@@ -149,11 +186,13 @@ public class ProductDAO extends DAO {
 				while (rs.next()) {
 					Album album = new Album();
 					album.setId(rs.getInt("album_id"));
+					album.setCategoryId(rs.getInt("category_id"));
 					album.setName(rs.getString("album_name"));
 					album.setArtist(rs.getString("artist"));
 					Timestamp createdAt = rs.getTimestamp("created_at");
 					album.setCreatedAt(createdAt);
 					album.setCategoryName(rs.getString("category_name"));
+					album.setCategoryImgName(rs.getString("category_img_name"));
 					albumList.add(album);
 				}
 			}
@@ -195,6 +234,7 @@ public class ProductDAO extends DAO {
 					Category category = new Category();
 					category.setId(rs.getInt("id"));
 					category.setName(rs.getString("category_name"));
+					category.setImgName(rs.getString("img_name"));
 					Timestamp createdAt = rs.getTimestamp("created_at");
 					category.setCreatedAt(createdAt);
 					Timestamp updatedAt = rs.getTimestamp("updated_at");
@@ -205,7 +245,7 @@ public class ProductDAO extends DAO {
 		}
 		return categoryList;
 	}
-
+	
 	//	検索結果を返す
 	public List<Song> getAlbumsSearchedWithKeyword(String keyword) throws Exception {
 		List<Song> songList = new ArrayList<>();
@@ -227,7 +267,7 @@ public class ProductDAO extends DAO {
 					Timestamp createdAt = rs.getTimestamp("album_created_at");
 					song.setCreatedAt(createdAt);
 					Timestamp updatedAt = rs.getTimestamp("album_updated_at");
-					song.setCreatedAt(updatedAt);
+					song.setUpdatedAt(updatedAt);
 					songList.add(song);
 				}
 			}
@@ -261,7 +301,7 @@ public class ProductDAO extends DAO {
 		List<Album> albumList = new ArrayList<>();
 		try (Connection con = getConnection();
 				PreparedStatement st = con.prepareStatement(
-						"select distinct user_id, album_id, albums.album_name, albums.artist from album_statuses inner join albums on album_statuses.album_id=albums.id where user_id = ?")) {
+						"select user_id, album_id, albums.album_name, albums.artist, album_statuses.created_at from album_statuses inner join albums on album_statuses.album_id=albums.id where user_id = ? order by album_statuses.created_at desc")) {
 			st.setInt(1, userId);
 			try (ResultSet rs = st.executeQuery()) {
 				while (rs.next()) {
@@ -273,8 +313,23 @@ public class ProductDAO extends DAO {
 				}
 			}
 		}
-		Collections.sort(albumList, Collections.reverseOrder());
-		return albumList;
+		
+		Iterator<Album> iterator = albumList.iterator();
+		List<Album> realFinalAlbumList = new ArrayList<>();
+		
+		if (iterator.hasNext()) {
+            Album previous = iterator.next();
+            realFinalAlbumList.add(previous);
+            
+            while (iterator.hasNext()) {
+                Album current = iterator.next();
+                if (previous.getId() != current.getId()) {
+                	realFinalAlbumList.add(current);
+                	previous = current;
+                }
+            }
+		}
+		return realFinalAlbumList;
 	}
 
 	//	ここから曲
@@ -290,8 +345,10 @@ public class ProductDAO extends DAO {
 					Song song = new Song();
 					song.setId(rs.getInt("song_id"));
 					song.setAlbumId(rs.getInt("album_id"));
+					song.setCategoryId(rs.getInt("category_id"));
 					song.setName(rs.getString("song_name"));
 					song.setAlbumName(rs.getString("album_name"));
+					song.setAlbumImgName(rs.getString("album_img_name"));
 					song.setArtist(rs.getString("artist"));
 					song.setPrice(rs.getInt("price"));
 					songList.add(song);
@@ -358,7 +415,19 @@ public class ProductDAO extends DAO {
 	public int getSongIntoCart(int userId, int songId) throws Exception {
 		try (Connection con = getConnection();
 				PreparedStatement st = con.prepareStatement(
-						"insert into song_statuses (user_id, song_id, status) values (?, ?, 1)")) {
+						"update song_statuses set status = 1 where user_id = ? and song_id = ?")) {
+			st.setInt(1, userId);
+			st.setInt(2, songId);
+			int line = st.executeUpdate();
+			return line;
+		}
+	}
+	
+	//	カート削除処理
+	public int removeSongFromCart(int userId, int songId) throws Exception {
+		try (Connection con = getConnection();
+				PreparedStatement st = con.prepareStatement(
+						"update song_statuses set status = 100 where user_id = ? and song_id = ?")) {
 			st.setInt(1, userId);
 			st.setInt(2, songId);
 			int line = st.executeUpdate();
@@ -377,25 +446,65 @@ public class ProductDAO extends DAO {
 		}
 	}
 
-	//	カート取得処理
-	public Cart getCartInfo(int songId) throws Exception {
-		Cart cart = new Cart();
+	//	カート、購入履歴取得処理
+	public Master getMasterInfo(int songId) throws Exception {
+		Master master = new Master();
 		try (Connection con = getConnection();
 				PreparedStatement st = con.prepareStatement(
 						"select * from master_view where song_id = ?")) {
 			st.setInt(1, songId);
 			try (ResultSet rs = st.executeQuery()) {
 				while (rs.next()) {
-					cart.setSongId(rs.getInt("song_id"));
-					cart.setAlbumId(rs.getInt("album_id"));
-					cart.setSongName(rs.getString("song_name"));
-					cart.setAlbumName(rs.getString("album_name"));
-					cart.setArtist(rs.getString("artist"));
-					cart.setPrice(rs.getInt("price"));
+					master.setSongId(rs.getInt("song_id"));
+					master.setAlbumId(rs.getInt("album_id"));
+					master.setSongName(rs.getString("song_name"));
+					master.setAlbumName(rs.getString("album_name"));
+					master.setArtist(rs.getString("artist"));
+					master.setPrice(rs.getInt("price"));
+					Timestamp updatedAt = rs.getTimestamp("album_updated_at");
+					master.setUpdatedAt(updatedAt);
 				}
 			}
 		}
-		return cart;
+		return master;
 	}
+	
+	
+	public int changeCategoryImgAndCategoryName(String imgName, String categoryName, int id) throws Exception {
+		try (Connection con = getConnection();
+				PreparedStatement st = con.prepareStatement(
+						"update categories set img_name = ? , category_name = ? where id = ?")) {
+			st.setString(1, imgName);
+			st.setString(2, categoryName);
+			st.setInt(3, id);
+			int line = st.executeUpdate();
+			return line;
+		}
+	}
+	
+	public int changeAlbum(String imgName, String albumName, String artist, int categoryId, int albumId) throws Exception {
+		try (Connection con = getConnection();
+				PreparedStatement st = con.prepareStatement(
+						"update albums set img_name = ? , album_name = ?, artist = ?, category_id = ? where id = ?")) {
+			st.setString(1, imgName);
+			st.setString(2, albumName);
+			st.setString(3, artist);
+			st.setInt(4, categoryId);
+			st.setInt(5, albumId);
+			int line = st.executeUpdate();
+			return line;
+		}
+	}
+	
+//	public int changeAlbumsCategory(int albumId, int categoryId) throws Exception {
+//		try (Connection con = getConnection();
+//				PreparedStatement st = con.prepareStatement(
+//						"update albums set category_id = ? where id = ?")) {
+//			st.setInt(1, categoryId);
+//			st.setInt(2, albumId);
+//			int line = st.executeUpdate();
+//			return line;
+//		}
+//	}
 
 }

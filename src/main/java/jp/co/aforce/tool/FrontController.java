@@ -18,10 +18,9 @@ public class FrontController extends HttpServlet {
 			Action action = (Action) Class.forName(name).newInstance();
 			String url = action.execute(request, response);
 
-			//			url変数へ正しく格納されているか確認するため
-//			System.out.println("path:" + path);
-//			System.out.println("name:" + name);
-//			System.out.println("url:" + url);
+			System.out.println("path:" + path);
+			System.out.println("name:" + name);
+			System.out.println("url:" + url);
 
 			request.getRequestDispatcher(url).forward(request, response);
 
