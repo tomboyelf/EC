@@ -17,9 +17,9 @@ import jp.co.aforce.beans.Category;
 import jp.co.aforce.beans.User;
 import jp.co.aforce.dao.ProductDAO;
 
-@WebServlet("/UploadCategoryImgServlet")
+@WebServlet("/ChangeCategoryImgServlet")
 @MultipartConfig(location = "C:\\pleiades-2024-03-java-win-64bit-jre_20240325\\workspace\\ShoppingSite\\src\\main\\webapp\\WEB-INF\\upload")
-public class UploadCategoryImgServlet extends HttpServlet {
+public class ChangeCategoryImgServlet extends HttpServlet {
 	@Override
 	public void init() throws ServletException {
 		// 必要に応じて一時ディレクトリを設定
@@ -30,23 +30,19 @@ public class UploadCategoryImgServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		
 		HttpSession session = request.getSession();
-		User user = (User)session.getAttribute("user");
-		ProductDAO dao = new ProductDAO();
-		Category category = new Category();
-		
-//		鰹節
-		if(user == null) {
+		User user = (User) session.getAttribute("user");
+		Category oldCategory = new Category();
+		ProductDAO productDao = new ProductDAO();
+
+		//		鰹節
+		if (user == null) {
 			response.sendRedirect("views/login.jsp");
 		}
+
 		//		inputからファイルを取得
 		Part part = request.getPart("file");
-		
-//		新情報
 		String imgName = this.getFileName(part);
-		String newName = request.getParameter("categoryName");
-		
 
 		///////////////////////////////////////////////
 		//		ファイルがnullだったら、もしくは名前が空白だったら
@@ -87,17 +83,32 @@ public class UploadCategoryImgServlet extends HttpServlet {
 			}
 		}
 		///////////////////////////////////////////////
+
+		int categoryId = Integer.parseInt(request.getParameter("categoryId"));
+		System.out.println("idの取得" + categoryId);
 		
-		category.setName(newName);
-		category.setImgName(imgName);
-		request.setAttribute("newCategory", category);
-//
+		try {
+			//		旧情報
+			oldCategory = productDao.getSpecificCategory(categoryId);
+			request.setAttribute("oldCategory", oldCategory);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		
+		//	　　新情報
+		Category newCategory = new Category(categoryId, imgName, oldCategory.getName());
+		request.setAttribute("newCategory", newCategory);
+		
+
 		try {
 			Thread.sleep(5000);
 			request.getRequestDispatcher("views/confirm.jsp").forward(request, response);
-		} catch(InterruptedException e){
+		} catch (InterruptedException e) {
 			e.printStackTrace();
-		}  
+		}
 	}
 
 	private String getFileName(Part part) {

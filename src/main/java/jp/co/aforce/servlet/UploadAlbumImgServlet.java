@@ -13,8 +13,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
+import jp.co.aforce.beans.Album;
 import jp.co.aforce.beans.Category;
-import jp.co.aforce.beans.Confirm;
 import jp.co.aforce.beans.User;
 import jp.co.aforce.dao.ProductDAO;
 
@@ -33,36 +33,32 @@ public class UploadAlbumImgServlet extends HttpServlet {
 			throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		User user = (User)session.getAttribute("user");
-		ProductDAO dao = new ProductDAO();
+		ProductDAO productDao = new ProductDAO();
+		Category category = new Category();
 		
 //		鰹節
 		if(user == null) {
 			response.sendRedirect("views/login.jsp");
 		}
-		
 		//		inputからファイルを取得
 		Part part = request.getPart("file");
 		
-		int albumId = Integer.parseInt(request.getParameter("albumId"));
-		
 //		新情報
 		String imgName = this.getFileName(part);
-		String newName = request.getParameter("name");
-		String newArtist = request.getParameter("artist");
+		String newName = request.getParameter("albumName");
+		String artist = request.getParameter("artist");
 		int categoryId = Integer.parseInt(request.getParameter("categoryOption"));
-		String categoryName = request.getParameter("categoryName");
-		Confirm newAlbum = new Confirm(albumId, categoryId, imgName, newName, newArtist, categoryName);
-		request.setAttribute("newAlbum", newAlbum);
 		
-//		旧情報
 		try {
-			Category category = dao.getSpecificCategory(categoryId);
-			Confirm oldCategory = new Confirm(category.getId(), category.getImgName(), category.getName());
-			request.setAttribute("oldCategory", oldCategory);
+			category = productDao.getSpecificCategory(categoryId);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		System.out.println("画像名、アルバム名、アーティスト、カテゴリId:" + imgName + newName + artist + categoryId + category.getName());
+		
 
+		///////////////////////////////////////////////
 		//		ファイルがnullだったら、もしくは名前が空白だったら
 		if (part == null) {
 			response.sendRedirect("views/admin-index.jsp");
@@ -88,10 +84,10 @@ public class UploadAlbumImgServlet extends HttpServlet {
 		}
 		String filePath = "C:\\pleiades-2024-03-java-win-64bit-jre_20240325\\workspace\\ShoppingSite\\src\\main\\webapp\\image\\album"
 				+ File.separator + imgName;
-		
-//		フォルダ内にすでにファイル名が存在する場合
+
+		//		フォルダ内にすでにファイル名が存在する場合
 		if (fileList.contains(imgName)) {
-//			存在しない場合
+			//			存在しない場合
 		} else if (!fileList.contains(imgName)) {
 			try {
 				part.write(filePath);
@@ -100,19 +96,17 @@ public class UploadAlbumImgServlet extends HttpServlet {
 				System.out.println("Failed to save file: " + e.getMessage());
 			}
 		}
-
-		try {
-			dao.changeAlbum(imgName, newName, newArtist, categoryId, albumId);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		///////////////////////////////////////////////
 		
+		Album album = new Album(imgName, newName, artist, categoryId, category.getName());
+		request.setAttribute("newAlbum", album);
+//
 		try {
-            Thread.sleep(5000);
-            request.getRequestDispatcher("views/confirm.jsp").forward(request, response);
-        } catch(InterruptedException e){
-            e.printStackTrace();
-        }  
+			Thread.sleep(5000);
+			request.getRequestDispatcher("views/confirm.jsp").forward(request, response);
+		} catch(InterruptedException e){
+			e.printStackTrace();
+		}  
 	}
 
 	private String getFileName(Part part) {

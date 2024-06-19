@@ -1,5 +1,7 @@
 package jp.co.aforce.action;
 
+import java.text.SimpleDateFormat;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
@@ -14,25 +16,39 @@ public class SignupConfirmAction extends Action {
 		HttpSession session = request.getSession();
 		response.setContentType("text/html; charset=UTF-8");
 		Message msg = new Message();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
 		try {
 			UserDAO dao = new UserDAO();
 
 			//仮登録情報の取得
-			User ultraFinalUser = new User();
-			ultraFinalUser = (User) session.getAttribute("notTrueFinalRealuser");
+
+			String username = request.getParameter("confirmUsername");
+			String password = request.getParameter("confirmPassword");
+			String lastname = request.getParameter("confirmLastname");
+			String firstname = request.getParameter("confirmFirstname");
+			String sex = request.getParameter("confirmSex");
+			String birthdateString = request.getParameter("confirmBirthdate");
+			String mailaddress = request.getParameter("confirmMailaddress");
+
+			java.util.Date birthdateUtil = dateFormat.parse(birthdateString);
+			java.sql.Date birthdate = new java.sql.Date(birthdateUtil.getTime());
+
+			User confirmedUser = new User(username, password, lastname, firstname, sex, birthdate, mailaddress);
 
 			//登録
-			dao.insert(ultraFinalUser);
-			session.removeAttribute("notTrueFinalRealuser");
+			if (dao.insert(confirmedUser) > 0) {
+				//ログイン処理
+				User user = new User();
+				user = dao.login(confirmedUser.getUsername(), confirmedUser.getPassword());
+				session.setAttribute("user", user);
 
-			//ログイン処理
-			User user = new User();
-			user = dao.login(ultraFinalUser.getUsername(), ultraFinalUser.getPassword());
-			session.setAttribute("user", user);
-			
-			request.setAttribute("completeMsg", msg.getCompleteMsg(0));
-			return "message.jsp";
+				request.setAttribute("completeMsg", msg.getCompleteMsg(0));
+				return "message.jsp";
+			} else {
+				request.setAttribute("signupErrorMsg", msg.getSignupErrorMsg(7));
+				return "signup.jsp";
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			return "signup.jsp";

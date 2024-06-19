@@ -38,13 +38,16 @@ public class ProductDAO extends DAO {
 		Album album = new Album();
 		try (Connection con = getConnection();
 				PreparedStatement st = con.prepareStatement(
-						"select * from master_view where album_id = ?")) {
+						"select * from album_category_view where album_id = ?")) {
 			st.setInt(1, albumId);
 			try (ResultSet rs = st.executeQuery()) {
 				while (rs.next()) {
 					album.setId(rs.getInt("album_id"));
+					album.setAlbumImgName(rs.getString("album_img_name"));
+					album.setCategoryId(rs.getInt("category_id"));
 					album.setCategoryName(rs.getString("category_name"));
-					album.setAlbumImgName(rs.getString("album_simg_name"));
+					album.setName(rs.getString("album_name"));
+					album.setArtist(rs.getString("artist"));
 				}
 			}
 		}
@@ -467,33 +470,6 @@ public class ProductDAO extends DAO {
 			}
 		}
 		return master;
-	}
-	
-	
-	public int changeCategoryImgAndCategoryName(String imgName, String categoryName, int id) throws Exception {
-		try (Connection con = getConnection();
-				PreparedStatement st = con.prepareStatement(
-						"update categories set img_name = ? , category_name = ? where id = ?")) {
-			st.setString(1, imgName);
-			st.setString(2, categoryName);
-			st.setInt(3, id);
-			int line = st.executeUpdate();
-			return line;
-		}
-	}
-	
-	public int changeAlbum(String imgName, String albumName, String artist, int categoryId, int albumId) throws Exception {
-		try (Connection con = getConnection();
-				PreparedStatement st = con.prepareStatement(
-						"update albums set img_name = ? , album_name = ?, artist = ?, category_id = ? where id = ?")) {
-			st.setString(1, imgName);
-			st.setString(2, albumName);
-			st.setString(3, artist);
-			st.setInt(4, categoryId);
-			st.setInt(5, albumId);
-			int line = st.executeUpdate();
-			return line;
-		}
 	}
 	
 //	public int changeAlbumsCategory(int albumId, int categoryId) throws Exception {

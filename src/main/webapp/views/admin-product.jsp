@@ -5,6 +5,12 @@
 
 <c:choose>
 	<c:when test="${categoryList != null && categoryList.size() != 0}">
+		<h2>新規カテゴリ登録</h2>
+		<form method="POST" enctype="multipart/form-data" action="/ShoppingSite/UploadCategoryImgServlet">
+			<p>画像</p><input type="file" name="file" required /><br> 
+			<p>カテゴリ名</p><input type="text" name="categoryName" value="${category.categoryName}" required /><br> 
+			<input type="submit" value="登録" />
+		</form>
 		<h2>カテゴリー一覧</h2>
 		<c:forEach var="category" items="${categoryList}">
 			<a href="Admin.action?categoryId=${category.id}">${category.name}</a>
@@ -12,6 +18,18 @@
 	</c:when>
 
 	<c:when test="${albumList != null && albumList.size() != 0}">
+		<h2>新規アルバム（シングル）登録</h2>
+		<form method="POST" enctype="multipart/form-data" action="/ShoppingSite/UploadAlbumImgServlet">
+			<p>画像</p><input type="file" name="file" required /><br> 
+			<p>アルバム名</p><input type="text" name="albumName" required /><br>
+			<p>アーティスト</p><input type="text" name="artist" required /><br>
+				<select name="categoryOption">
+					<c:forEach var="category" items="${categoryOption}">
+						<option value="${category.id}" form="next">${category.name}</option>
+					</c:forEach>
+				</select>
+			<input type="submit" value="登録" />
+		</form>
 		<h2>アルバム一覧</h2>
 		<c:forEach var="album" items="${albumList}">
 			<a href="Admin.action?albumId=${album.id}">${album.name}</a>
@@ -25,54 +43,62 @@
 			<img src="../image/category/${category.categoryImgName}"
 				alt="categoryImage">
 			<form method="POST" enctype="multipart/form-data"
-				action="/ShoppingSite/UploadCategoryImgServlet">
-				<input type="hidden" name="categoryId"
-					value="${category.categoryId}"> <input type="file"
-					name="file" required /><br> <input type="text" name="name"
-					value="${category.categoryName}" required /><br> <input
-					type="submit" value="変更を適用" />
+				action="/ShoppingSite/ChangeCategoryImgServlet">
+				<input type="file" name="file" required /><br> 
+				<input type="hidden" name="categoryId" value="${category.categoryId}"> 
+				<input type="submit" value="画像を変更" />
+			</form>	
+			<form method="POST" action="/ShoppingSite/ChangeCategoryNameServlet">	
+				<input type="text" name="categoryName" value="${category.categoryName}" required /><br> 
+				<input type="hidden" name="categoryId" value="${category.categoryId}">
+				<input type="submit" value="名前を変更" />
 			</form>
 			<h2>${category.categoryName}のアルバム、シングル一覧</h2>
 		</c:forEach>
-		<form action="AdminChange.action" method="post" id="next">
 			<c:forEach var="album" items="${albumListSortedByCategory}">
 				<p>${album.name}</p>
-				<input type="hidden" name="albumId" value="${album.name}">
-				<select name="categoryOption">
-					<option value="" form="next">変更先を選択</option>
-					<c:forEach var="category" items="${categoryOption}">
-						<option value="${category.id}" form="next">${category.name}</option>
-					</c:forEach>
-				</select>
 			</c:forEach>
-			<input type="submit" value="ジャンルを変更">
-		</form>
+	</c:when>
+	
+	<c:when test="${albumListSortedByCategory.size() == 0}">
+		<p>このカテゴリにはアルバムが登録されていません</p>
+		<button type="button" onclick="history.back()">戻る</button>
 	</c:when>
 
 	<c:when
-		test="${songListWithAlbumId != null && songListWithAlbumId.size() != 0}">
-		<c:forEach var="album" items="${songListWithAlbumId}" begin="0"
-			end="0">
+		test="${album != null && categoryOption != null}">
 			<img src="../image/album/${album.albumImgName}" alt="albumImage">
 			<form method="post" enctype="multipart/form-data"
-				action="/ShoppingSite/UploadAlbumImgServlet">
-				<input type="hidden" name="albumId" value="${album.albumId}">
-				<input type="file" name="file" required /><br> <input
-					type="text" name="name" value="${album.albumName}" required /><br>
+				action="/ShoppingSite/ChangeAlbumImgServlet">
+				<input type="file" name="file" required /><br> 
+				<input type="hidden" name="albumId" value="${album.id}">
+				<input type="submit" value="変更を適用" />
+			</form>
+			<form method="post" action="/ShoppingSite/ChangeAlbumNameServlet">
+				<input type="text" name="name" value="${album.name}" required /><br>
+				<input type="hidden" name="albumId" value="${album.id}">
+				<input type="submit" value="変更を適用" />
+			</form>
+			<form method="post" action="/ShoppingSite/ChangeAlbumNameServlet">
 				<input type="text" name="artist" value="${album.artist}" required /><br>
+				<input type="hidden" name="albumId" value="${album.id}">
+				<input type="submit" value="変更を適用" />
+			</form>
+			<form method="post" action="/ShoppingSite/ChangeAlbumNameServlet">
+				<input type="hidden" name="albumId" value="${album.id}">
 				<select name="categoryOption">
-					<option value="${album.categoryId}" form="next">変更先を選択</option>
 					<c:forEach var="category" items="${categoryOption}">
-						<input type="hidden" name="categoryName" value="${category.name}">
 						<option value="${category.id}" form="next">${category.name}</option>
 					</c:forEach>
-				</select> <input type="submit" value="変更を適用" />
+				</select> 
+				<input type="submit" value="変更を適用" />
 			</form>
-			<h2>${album.albumName}の曲一覧</h2>
-		</c:forEach>
+		<c:if test="${songListWithAlbumId.size() != 0}">
+		<h2>${album.name}の曲一覧</h2>
 		<c:forEach var="song" items="${songListWithAlbumId}">
 			<p>${song.name}</p>
 		</c:forEach>
+		</c:if>
 	</c:when>
 	<c:otherwise>
 		${msg }

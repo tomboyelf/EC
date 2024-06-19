@@ -10,44 +10,53 @@ public class Category implements java.io.Serializable {
 	private Timestamp createdAt;
 	private Timestamp updatedAt;
 
-	   public int getId() {
-	        return id;
-	    }
+	// 管理者側カテゴリー情報変更用
+	public Category(int id, String imgName, String name) {
+		this.id = id;
+		this.imgName = imgName;
+		this.name = name;
+	}
+	
+	public Category() {}
 
-	    public void setId(int id) {
-	        this.id = id;
-	    }
+	public int getId() {
+		return id;
+	}
 
-	    public String getName() {
-	        return name;
-	    }
+	public void setId(int id) {
+		this.id = id;
+	}
 
-	    public void setName(String name) {
-	        this.name = name;
-	    }
-	    
-	    public String getImgName() {
-	    	return imgName;
-	    }
-	    
-	    public void setImgName(String imgName) {
-	    	this.imgName = imgName;
-	    }
+	public String getName() {
+		return name;
+	}
 
-	    public Timestamp getCreatedAt() {
-	        return createdAt;
-	    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-	    public void setCreatedAt(Timestamp createdAt) {
-	        this.createdAt = createdAt;
-	    }
+	public String getImgName() {
+		return imgName;
+	}
 
-	    public Timestamp getUpdatedAt() {
-	        return updatedAt;
-	    }
+	public void setImgName(String imgName) {
+		this.imgName = imgName;
+	}
 
-	    public void setUpdatedAt(Timestamp updatedAt) {
-	        this.updatedAt = updatedAt;
-	    }
+	public Timestamp getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(Timestamp createdAt) {
+		this.createdAt = createdAt;
+	}
+
+	public Timestamp getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(Timestamp updatedAt) {
+		this.updatedAt = updatedAt;
+	}
 
 }

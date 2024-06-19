@@ -52,6 +52,7 @@ public class Message {
 		/*0*/ adminCompleteMsg.add("カテゴリー情報が変更されました");
 		/*1*/ adminCompleteMsg.add("アルバム情報が変更されました");
 		/*2*/ adminCompleteMsg.add("曲情報が変更されました");
+		/*3*/ adminCompleteMsg.add("追加に成功しました");
 
 	}
 

@@ -3,7 +3,7 @@
 <%@include file="header.jsp"%>
 
 <c:choose>
-	<c:when test="${albumListDate != null}">
+	<c:when test="${albumAndSingleListDate != null}">
 		<h2>新着</h2>
 	</c:when>
 	<c:when test="${albumListTraffic != null}">
@@ -26,7 +26,7 @@
 <!-- 新着一覧出力 -->
 <!-- 今週のシングル -->
 <c:if
-	test="${singleListWeekly !=  null && singleListWeekly.size() != 0}">
+	test="${singleListWeekly.size() != 0}">
 	<h3>今週のシングル</h3>
 	<c:forEach var="singleList" items="${singleListWeekly}" begin="0"
 		end="12">
@@ -43,7 +43,7 @@
 </c:if>
 
 <!-- 今週のアルバム -->
-<c:if test="${albumListWeekly !=  null && albumListWeekly.size() != 0}">
+<c:if test="${albumListWeekly.size() != 0}">
 	<h3>今週のアルバム</h3>
 	<c:forEach var="albumList" items="${albumListWeekly}" begin="0"
 		end="12">
@@ -59,7 +59,40 @@
 	</c:forEach>
 </c:if>
 
-<!-- 先週発売のアルバムも追加予定 -->
+<!-- 先週のシングル -->
+<c:if
+	test="${singleListLastWeekly.size() != 0}">
+	<h3>先週のシングル</h3>
+	<c:forEach var="singleList" items="${singleListLastWeekly}" begin="0"
+		end="12">
+		<a href="SearchSong.action?searchSongId=${singleList.id}">
+			<div>
+				<img src="../image/album/${singleList.id}.jpg" alt="product image">
+				<p>${singleList.name}</p>
+				<br>
+				<p>${singleList.artist}</p>
+				<br>
+			</div>
+		</a>
+	</c:forEach>
+</c:if>
+
+<!-- 先週のアルバム -->
+<c:if test="${albumListLastWeekly.size() != 0}">
+	<h3>先週のアルバム</h3>
+	<c:forEach var="albumList" items="${albumListLastWeekly}" begin="0"
+		end="12">
+		<a href="SearchSong.action?searchSongId=${albumList.id}">
+			<div>
+				<img src="../image/album/${albumList.id}.jpg" alt="product image">
+				<p>${albumList.name}</p>
+				<br>
+				<p>${albumList.artist}</p>
+				<br>
+			</div>
+		</a>
+	</c:forEach>
+</c:if>
 
 
 <!-- ランキング一覧出力 -->

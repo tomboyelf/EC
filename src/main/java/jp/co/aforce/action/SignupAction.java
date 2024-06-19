@@ -20,20 +20,21 @@ public class SignupAction extends Action {
 		response.setContentType("text/html; charset=UTF-8");
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		Message msg = new Message();
+		UserDAO dao = new UserDAO();
+		List<Integer> duplicationErrorMessageList = new ArrayList<>();
 
 		//		入力フォームの値を取得
 		String username = request.getParameter("username");
-		String newUsername = request.getParameter("newUsername");
 		String password = request.getParameter("password");
-		String newPassword = request.getParameter("newPassword");
 		String lastname = request.getParameter("lastname");
 		String firstname = request.getParameter("firstname");
 		String sex = request.getParameter("sex");
 		String mailaddress = request.getParameter("mailaddress");
-		String newMailaddress = request.getParameter("newMailaddress");
-		UserDAO dao = new UserDAO();
-		List<Integer> duplicationErrorMessageList = new ArrayList<>();
 
+		String newUsername = request.getParameter("newUsername");
+		String newPassword = request.getParameter("newPassword");
+		String newMailaddress = request.getParameter("newMailaddress");
+		
 		//		マイページのアカウント設定
 		//		パスワード編
 		if (request.getParameter("optionId") != null && request.getParameter("optionId").equals("password")) {
@@ -192,7 +193,6 @@ public class SignupAction extends Action {
 		}
 
 		//		ここから新規登録
-		session.removeAttribute("notTrueFinalRealuser");
 		try {
 			duplicationErrorMessageList = dao.duplicationCheck(username, mailaddress);
 		} catch (Exception e) {
@@ -204,18 +204,19 @@ public class SignupAction extends Action {
 		errorMessageList.addAll(duplicationErrorMessageList);
 		//		errorMessageListリストに入った数字でエラーメッセージを呼び出す
 
+		//入力内容に問題があれば入力画面へメッセージとともに飛ばす
 		if (errorMessageList.size() != 0) {
 			for (int i : errorMessageList) {
 				request.setAttribute("signupErrorMsg00" + i, msg.getSignupErrorMsg(i));
 			}
 			return "signup.jsp";
 		}
-
+			
 		//入力内容に問題がなければbeanに入れて確認画面へ飛ばす
 		if (errorMessageList.size() == 0) {
 			//		beanへ格納
-			User notTrueFinalRealuser = new User(username, password, lastname, firstname, sex, birthdate, mailaddress);
-			session.setAttribute("notTrueFinalRealuser", notTrueFinalRealuser);
+			User confirmUser = new User(username, password, lastname, firstname, sex, birthdate, mailaddress);
+			request.setAttribute("confirmUser", confirmUser);
 		}
 		return "confirm.jsp";
 	}

@@ -53,6 +53,16 @@ public class LoginAction extends Action {
 			session.removeAttribute("currentPage");
 			return currentPage;
 		}
+		
+		ProductDAO dao = new ProductDAO();
+		try {
+			List<Album> albumAndSingleListDate = dao.getAlbumAndSingleOrderedByDate();
+			request.setAttribute("albumAndSingleListDate", albumAndSingleListDate);
+			List<Album> albumAndSingleListTraffic = dao.getAlbumAndSingleOrderedByTraffic();
+			request.setAttribute("albumAndSingleListTraffic", albumAndSingleListTraffic);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return "index.jsp";
 	}
 }

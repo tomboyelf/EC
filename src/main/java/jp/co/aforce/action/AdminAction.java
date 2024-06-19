@@ -39,6 +39,8 @@ public class AdminAction extends Action {
 			if(request.getParameter("adminId").equals("album")) {
 				List<Album> albumList = dao.getAlbumAndSingleOrderedByDate();
 				request.setAttribute("albumList", albumList);
+				List<Category> categoryList = dao.getCategories();
+				request.setAttribute("categoryOption", categoryList);
 				return "admin-product.jsp";
 			}
 		}
@@ -52,6 +54,9 @@ public class AdminAction extends Action {
 //		アルバム別
 		if (request.getParameter("albumId") != null) {
 			int albumId = Integer.parseInt(request.getParameter("albumId"));
+			Album album = dao.getSpecificAlbum(albumId);
+			System.out.println(album.getAlbumImgName());
+			request.setAttribute("album", album);
 			List<Song> songListWithAlbumId = dao.getSongswithAlbumId(albumId);
 			request.setAttribute("songListWithAlbumId", songListWithAlbumId);
 			List<Category> categoryList = dao.getCategories();

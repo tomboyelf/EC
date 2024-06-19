@@ -16,6 +16,16 @@ public class Album implements java.io.Serializable, Comparable<Album> {
 	//	別テーブルのカラム
 	private String categoryName;
 	private String categoryImgName;
+	
+	public Album(String albumImgName, String name, String artist, int categoryId, String categoryName) {
+		this.albumImgName = albumImgName;
+		this.name = name;
+		this.artist = artist;
+		this.categoryId = categoryId;
+		this.categoryName = categoryName;
+	}
+	
+	public Album() {}
 
 	public int getId() {
 		return id;

@@ -59,7 +59,7 @@ public class Sort {
 			Date albumCreatedAtDate = album.getCreatedAt();
 			System.out.println("日付:" + albumCreatedAtDate);
 			if (albumCreatedAtDate != null && albumCreatedAtDate.compareTo(aWeekAgoDate) > 0) {
-				System.out.println(album.getArtist());
+				System.out.println("今週" + album.getArtist());
 				albumListWeekly.add(album);
 			}
 		}
@@ -88,6 +88,7 @@ public class Sort {
 			Date albumCreatedAtDate = album.getCreatedAt();
 			if (albumCreatedAtDate != null && albumCreatedAtDate.compareTo(aWeekAgoDate) < 0
 					&& albumCreatedAtDate.compareTo(twoWeeksAgoDate) > 0) {
+				System.out.println("先週" + album.getArtist());
 				albumListLastWeekly.add(album);
 			}
 		}
