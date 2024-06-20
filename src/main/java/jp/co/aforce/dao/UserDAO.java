@@ -219,39 +219,6 @@ public class UserDAO extends DAO {
 		}
 
 	}
-	//	public List<User> showAll() throws Exception {
-	//		List<User> allList = new ArrayList();
-	//		Connection con = getConnection();
-	//		PreparedStatement st;
-	//
-	//		st = con.prepareStatement(
-	//				"select * from login");
-	//
-	//		ResultSet rs = st.executeQuery();
-	//		while (rs.next()) {
-	//			User customer = new User(rs.getInt("id"), rs.getString("login"), rs.getString("password"));
-	//			allList.add(customer);
-	//		}
-	//
-	//		st.close();
-	//		con.close();
-	//
-	//		return allList;
-	//	}
-	//
-	//	public int deleteAcc(int id) throws Exception {
-	//		Connection con = getConnection();
-	//		PreparedStatement st;
-	//
-	//		st = con.prepareStatement(
-	//				"delete from login where id=?");
-	//		st.setInt(1, id);
-	//		int line = st.executeUpdate();
-	//
-	//		st.close();
-	//		con.close();
-	//		return line;
-	//	}
 
 	public static void main(String[] args) {
 		UserDAO dao = new UserDAO();

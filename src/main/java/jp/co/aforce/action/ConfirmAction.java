@@ -34,7 +34,7 @@ public class ConfirmAction extends Action {
 			//		新しい購入履歴取得
 			List<Integer> purchaseHistoryList = productDao.getPurchaseHistoryList(user.getId());
 			session.setAttribute("purchaseHistoryList", purchaseHistoryList);
-			request.setAttribute("completeMsg", msg.getCompleteMsg(3));
+			request.setAttribute("completeMsg003", msg.getCompleteMsg(3));
 			return "message.jsp";
 		}
 
@@ -89,6 +89,33 @@ public class ConfirmAction extends Action {
 			String artist = request.getParameter("newAlbumArtist");
 			int categoryId = Integer.parseInt(request.getParameter("newAlbumCategory"));
 			int line = adminDao.createNewAlbum(albumImgName, albumName, artist, categoryId);
+			if (line > 0) {
+				request.setAttribute("adminCompleteMsg", msg.getAdminCompleteMsg(3));
+				return "message.jsp";
+			}
+		}
+		
+//		曲情報変更
+		if (request.getParameter("newSongId") != null && request.getParameter("newSongAudio") != null && request.getParameter("newSongName") != null && request.getParameter("newSongPrice") != null && request.getParameter("newSongAlbum") != null) {
+			String name = request.getParameter("newSongName");
+			int price = Integer.parseInt(request.getParameter("newSongPrice"));
+			int albumId = Integer.parseInt(request.getParameter("newSongAlbum"));
+			int songId = Integer.parseInt(request.getParameter("newSongId"));
+			String audio = request.getParameter("newSongAudio");
+			int line = adminDao.changeSong(name, audio, price, albumId, songId);
+			if (line > 0) {
+				request.setAttribute("adminCompleteMsg", msg.getAdminCompleteMsg(0));
+				return "message.jsp";
+			}
+		}
+		
+//		曲新規作成
+		if (request.getParameter("newSongAudio") != null && request.getParameter("newSongName") != null && request.getParameter("newSongPrice") != null && request.getParameter("newSongAlbum") != null) {
+			String name = request.getParameter("newSongName");
+			int price = Integer.parseInt(request.getParameter("newSongPrice"));
+			int albumId = Integer.parseInt(request.getParameter("newSongAlbum"));
+			String audio = request.getParameter("newSongAudio");
+			int line = adminDao.createNewSong(name, audio, price, albumId);
 			if (line > 0) {
 				request.setAttribute("adminCompleteMsg", msg.getAdminCompleteMsg(3));
 				return "message.jsp";

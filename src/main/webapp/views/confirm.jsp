@@ -46,11 +46,11 @@
 
 	<c:when test="${newCategory != null && oldCategory != null}">
 		<h2>変更前</h2>
-		<img src="image/category/${oldCategory.imgName}" alt="categoryImage">
+		<img src="image/category/${oldCategory.imgName}" alt="categoryImage" rel="preload">
 		<p>${oldCategory.name}</p>
 		<form action="views/Confirm.action" method="post">
 			<h2>変更後</h2>
-			<img src="image/category/${newCategory.imgName}" alt="categoryImage">
+			<img src="image/category/${newCategory.imgName}" alt="categoryImage" rel="preload">
 			<p>${newCategory.name}</p>
 			<input type="hidden" name="newCategoryId" value="${newCategory.id}">
 			<input type="hidden" name="newCategoryImgName" value="${newCategory.imgName}">
@@ -62,7 +62,7 @@
 	
 	<c:when test="${newCategory != null && oldCategory == null}">
 		<form action="views/Confirm.action" method="post">
-			<img src="image/category/${newCategory.imgName}" alt="categoryImage">
+			<img src="image/category/${newCategory.imgName}" alt="categoryImage" rel="preload">
 			<p>${newCategory.name}</p>
 			<input type="hidden" name="newCategoryImgName" value="${newCategory.imgName}">
 			<input type="hidden" name="newCategoryName" value="${newCategory.name}">
@@ -72,14 +72,14 @@
 	</c:when>
 	
 	<c:when test="${newAlbum != null && oldAlbum != null}">
-		<h2>変更前</h2>
-		<img src="image/album/${oldAlbum.albumImgName}" alt="albumImage">
+		<h2>変更前</h2> 
+		<img src="image/album/${oldAlbum.albumImgName}" alt="albumImage" rel="preload">
 		<p>${oldAlbum.name}</p>
 		<p>${oldAlbum.artist}</p>
 		<p>${oldAlbum.categoryName}</p>
 		<form action="views/Confirm.action" method="post">
 			<h2>変更後</h2>
-			<img src="image/album/${newAlbum.albumImgName}" alt="albumImage">
+			<img src="image/album/${newAlbum.albumImgName}" alt="albumImage" rel="preload">
 			<p>${newAlbum.name}</p>
 			<p>${newAlbum.artist}</p>
 			<p>${newAlbum.categoryName}</p>
@@ -93,21 +93,43 @@
 		</form>
 	</c:when>
 	
-	<c:when test="${newAlbum != null && oldAlbum == null}">
+	<c:when test="${newSong != null && oldSong == null}">
 		<form action="views/Confirm.action" method="post">
-			<img src="image/album/${newAlbum.albumImgName}" alt="albumImage">
-			<p>${newAlbum.albumImgName}</p>
-			<p>${newAlbum.name}</p>
-			<p>${newAlbum.artist}</p>
-			<p>${newAlbum.categoryName}</p>
-			<input type="hidden" name="newAlbumImgName" value="${newAlbum.albumImgName}">
-			<input type="hidden" name="newAlbumName" value="${newAlbum.name}">
-			<input type="hidden" name="newAlbumArtist" value="${newAlbum.artist}">
-			<input type="hidden" name="newAlbumCategory" value="${newAlbum.categoryId}">
+			<p>${newSong.albumName}</p>
+			<p>${newSong.name}</p>
+			<p>${newSong.price}</p>
+			<audio src="audio/${newSong.audioName}" controls preload="auto"></audio>
+			<input type="hidden" name="newSongAudio" value="${newSong.audioName}">
+			<input type="hidden" name="newSongName" value="${newSong.name}">
+			<input type="hidden" name="newSongPrice" value="${newSong.price}">
+			<input type="hidden" name="newSongAlbum" value="${newSong.albumId}">
 			<input type="button" onclick="history.back()" value="修正">
 			<input type="submit" value="確定">
 		</form>
 	</c:when>
+	
+	<c:when test="${newSong != null && oldSong != null}">
+		<h2>変更前</h2>
+		<p>${oldSong.name}</p>
+		<p>${oldSong.price}</p>
+		<p>${oldSong.albumName}</p>
+		<audio src="audio/${oldSong.audioName}" controls preload="auto"></audio>
+		<form action="Confirm.action" method="post">
+			<h2>変更後</h2>
+			<p>${newSong.name}</p>
+			<p>${newSong.price}</p>
+			<p>${newSong.albumName}</p>
+			<audio src="audio/${newSong.audioName}" controls preload="auto"></audio>
+			<input type="hidden" name="newSongId" value="${oldSong.id}">
+			<input type="hidden" name="newSongName" value="${newSong.name}">
+			<input type="hidden" name="newSongPrice" value="${newSong.price}">
+			<input type="hidden" name="newSongAlbum" value="${newSong.albumId}">
+			<input type="hidden" name="newSongAudio" value="${newSong.audioName}">
+			<input type="button" onclick="history.back()" value="修正">
+			<input type="submit" value="確定">
+		</form>
+	</c:when>
+	
 	<c:otherwise>
 		<p>存在しないページです</p>
 	</c:otherwise>

@@ -16,7 +16,7 @@ public class AdminAction extends Action {
 	public String execute(
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		HttpSession session = request.getSession();
-		ProductDAO dao = new ProductDAO();
+		ProductDAO productDao = new ProductDAO();
 		User user = new User();
 //		Message msg = new Message();
 		user = (User) session.getAttribute("user");
@@ -31,39 +31,100 @@ public class AdminAction extends Action {
 			
 //		カテゴリー設定へ
 			if(request.getParameter("adminId").equals("category")) {
-				List<Category> categoryList = dao.getCategories();
+				List<Category> categoryList = productDao.getCategories();
 				request.setAttribute("categoryList", categoryList);
 				return "admin-product.jsp";
 			}
 //		アルバム設定へ
 			if(request.getParameter("adminId").equals("album")) {
-				List<Album> albumList = dao.getAlbumAndSingleOrderedByDate();
+				List<Album> albumList = productDao.getAlbumAndSingleOrderedByDate();
 				request.setAttribute("albumList", albumList);
-				List<Category> categoryList = dao.getCategories();
+				List<Category> categoryList = productDao.getCategories();
 				request.setAttribute("categoryOption", categoryList);
 				return "admin-product.jsp";
 			}
+//		曲設定へ
+			if(request.getParameter("adminId").equals("song")) {
+				List<Song> songList = productDao.getSongs();
+				request.setAttribute("songList", songList);
+				List<Album> albumList = productDao.getAlbumAndSingleOrderedByDate();
+				request.setAttribute("albumOption", albumList);
+				return "admin-product.jsp";
+			}
+//		顧客情報へ
+			if(request.getParameter("adminId").equals("user")) {
+				List<Song> songList = productDao.getSongs();
+				request.setAttribute("songList", songList);
+				List<Album> albumList = productDao.getAlbumAndSingleOrderedByDate();
+				request.setAttribute("albumOption", albumList);
+				return "admin-product.jsp";
+			}
+			
+			
+			
 		}
+		
+		
+		
 //		カテゴリー別
 		if (request.getParameter("categoryId") != null) {
 			int categoryId = Integer.parseInt(request.getParameter("categoryId"));
-			List<Album> albumListSortedByCategory = dao.getAlbumsSortedByCategoryOrderedByDate(categoryId);
+			Category category = productDao.getSpecificCategory(categoryId);
+			request.setAttribute("category", category);
+			List<Album> albumListSortedByCategory = productDao.getAlbumsSortedByCategoryOrderedByDate(categoryId);
 			request.setAttribute("albumListSortedByCategory", albumListSortedByCategory);
 			return "admin-product.jsp";
 		}
 //		アルバム別
 		if (request.getParameter("albumId") != null) {
 			int albumId = Integer.parseInt(request.getParameter("albumId"));
-			Album album = dao.getSpecificAlbum(albumId);
-			System.out.println(album.getAlbumImgName());
+			Album album = productDao.getSpecificAlbum(albumId);
 			request.setAttribute("album", album);
-			List<Song> songListWithAlbumId = dao.getSongswithAlbumId(albumId);
+			List<Song> songListWithAlbumId = productDao.getSongswithAlbumId(albumId);
 			request.setAttribute("songListWithAlbumId", songListWithAlbumId);
-			List<Category> categoryList = dao.getCategories();
+			List<Category> categoryList = productDao.getCategories();
 			request.setAttribute("categoryOption", categoryList);
 			return "admin-product.jsp";
 		}
+//		曲別
+		if (request.getParameter("songId") != null) {
+			int songId = Integer.parseInt(request.getParameter("songId"));
+			Song song = productDao.getSpecificSong(songId);
+			request.setAttribute("song", song);
+			List<Album> albumList = productDao.getAlbumAndSingleOrderedByDate();
+			request.setAttribute("albumOption", albumList);
+			return "admin-product.jsp";
+		}
 		
+		if (request.getParameter("songChangeId") != null) {
+			if (request.getParameter("songChangeId").equals("nameChange")) {
+				int songId = Integer.parseInt(request.getParameter("oldSongId"));
+				Song oldSong = productDao.getSpecificSong(songId);
+				String newName = request.getParameter("name");
+				Song newSong = new Song(songId, oldSong.getAlbumId(), oldSong.getAudioName(), newName, oldSong.getAlbumName(), oldSong.getPrice());
+				request.setAttribute("oldSong", oldSong);
+				request.setAttribute("newSong", newSong);
+				return "confirm.jsp";
+			}
+////			if (request.getParameter("songChangeId").equals("priceChange")) {
+//				int songId = Integer.parseInt(request.getParameter("songId"));
+//				Song oldSong = dao.getSpecificSong(songId);
+//				int newPrice = Integer.parseInt(request.getParameter("price"));
+//				Song newSong = new Song(songId, oldSong.getAlbumId(), newName, oldSong.getAlbumName(), oldSong.getPrice());
+//				request.setAttribute("oldSong", oldSong);
+//				request.setAttribute("newSong", newSong);
+//				return "confirm.jsp";
+//			}
+//			if (request.getParameter("songChangeId").equals("albumChange")) {
+//				int songId = Integer.parseInt(request.getParameter("songId"));
+//				Song oldSong = dao.getSpecificSong(songId);
+//				request.getParameter("albumOption");
+//				Song newSong = new Song(songId, oldSong.getAlbumId(), newName, oldSong.getAlbumName(), oldSong.getPrice());
+//				request.setAttribute("oldSong", oldSong);
+//				request.setAttribute("newSong", newSong);
+//				return "confirm.jsp";
+//			}
+		}
 		
 		System.out.println("seikou");
 		return "0";

@@ -8,6 +8,7 @@
 <form action="Login.action" method="post">
 	ユーザー名<input type="text" name="username" value="${username}" required><br>
 	パスワード<input type="password" name="password" required><br>
+	<input type="hidden" name="referer" value="${referer}">
 	<input type="submit" value="ログイン">
 </form>
 <p>

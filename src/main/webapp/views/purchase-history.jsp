@@ -3,6 +3,9 @@
 <%@include file="header.jsp"%>
 
 <%
+String currentPage = "purchase-history.jsp";
+session.setAttribute("currentPage", currentPage);
+
 List<Integer> purchaseHistoryList = (List<Integer>) session.getAttribute("purchaseHistoryList");
 List<Master> purchaseHistoryInfo = new ArrayList<>();
 ProductDAO dao = new ProductDAO();
@@ -26,6 +29,7 @@ pageContext.setAttribute("purchaseHistoryInfo", purchaseHistoryInfo);
 		<%-- <p>${purchaseHistoryInfo.updatedAt}</p> --%>
 	</c:forEach>
 </c:if>
+<a href="download.jsp">ダウンロード画面へ</a>
 <a href="index.jsp">ホーム画面へ</a>
 
 <%@include file="footer.jsp"%>

@@ -14,8 +14,8 @@ import jp.co.aforce.beans.Master;
 import jp.co.aforce.beans.Song;
 
 public class ProductDAO extends DAO {
-	
-//	指定カテゴリ取得
+
+	//	指定カテゴリ取得
 	public Category getSpecificCategory(int categoryId) throws Exception {
 		Category category = new Category();
 		try (Connection con = getConnection();
@@ -32,8 +32,8 @@ public class ProductDAO extends DAO {
 		}
 		return category;
 	}
-	
-//	指定アルバム取得
+
+	//	指定アルバム取得
 	public Album getSpecificAlbum(int albumId) throws Exception {
 		Album album = new Album();
 		try (Connection con = getConnection();
@@ -52,6 +52,26 @@ public class ProductDAO extends DAO {
 			}
 		}
 		return album;
+	}
+
+	//	指定曲取得
+	public Song getSpecificSong(int songId) throws Exception {
+		Song song = new Song();
+		try (Connection con = getConnection();
+				PreparedStatement st = con.prepareStatement(
+						"select * from songs where id = ?")) {
+			st.setInt(1, songId);
+			try (ResultSet rs = st.executeQuery()) {
+				while (rs.next()) {
+					song.setId(rs.getInt("id"));
+					song.setAlbumId(rs.getInt("album_id"));
+					song.setAudioName(rs.getString("audio_name"));
+					song.setName(rs.getString("song_name"));
+					song.setPrice(rs.getInt("price"));
+				}
+			}
+		}
+		return song;
 	}
 
 	//新着全部
@@ -248,7 +268,7 @@ public class ProductDAO extends DAO {
 		}
 		return categoryList;
 	}
-	
+
 	//	検索結果を返す
 	public List<Song> getAlbumsSearchedWithKeyword(String keyword) throws Exception {
 		List<Song> songList = new ArrayList<>();
@@ -279,14 +299,15 @@ public class ProductDAO extends DAO {
 	}
 
 	//ランキング更新処理
-	public void updateAlbumTraffic(int albumIdToSearchSongs) throws Exception {
-		try (Connection con = getConnection();
-				PreparedStatement st = con.prepareStatement(
-						"update albums set traffic = traffic + 1 where id = ?")) {
-			st.setInt(1, albumIdToSearchSongs);
-			st.executeUpdate();
+
+		public void updateAlbumTraffic(int albumIdToSearchSongs) throws Exception {
+			try (Connection con = getConnection();
+					PreparedStatement st = con.prepareStatement(
+							"update albums set traffic = traffic + 1 where id = ?")) {
+				st.setInt(1, albumIdToSearchSongs);
+				st.executeUpdate();
+			}
 		}
-	}
 
 	//	閲覧履歴テーブルの更新
 	public void updateUserAlbumStatus(int userId, int albumIdToSearchSongs) throws Exception {
@@ -316,26 +337,46 @@ public class ProductDAO extends DAO {
 				}
 			}
 		}
-		
+
 		Iterator<Album> iterator = albumList.iterator();
 		List<Album> realFinalAlbumList = new ArrayList<>();
-		
+
 		if (iterator.hasNext()) {
-            Album previous = iterator.next();
-            realFinalAlbumList.add(previous);
-            
-            while (iterator.hasNext()) {
-                Album current = iterator.next();
-                if (previous.getId() != current.getId()) {
-                	realFinalAlbumList.add(current);
-                	previous = current;
-                }
-            }
+			Album previous = iterator.next();
+			realFinalAlbumList.add(previous);
+
+			while (iterator.hasNext()) {
+				Album current = iterator.next();
+				if (previous.getId() != current.getId()) {
+					realFinalAlbumList.add(current);
+					previous = current;
+				}
+			}
 		}
 		return realFinalAlbumList;
 	}
 
 	//	ここから曲
+	//  とりあえず全部
+	public List<Song> getSongs() throws Exception {
+		List<Song> songList = new ArrayList<>();
+		try (Connection con = getConnection();
+				PreparedStatement st = con.prepareStatement(
+						"select * from songs")) {
+			try (ResultSet rs = st.executeQuery()) {
+				while (rs.next()) {
+					Song song = new Song();
+					song.setId(rs.getInt("id"));
+					song.setAudioName(rs.getString("audio_name"));
+					song.setName(rs.getString("song_name"));
+					song.setPrice(rs.getInt("price"));
+					songList.add(song);
+				}
+			}
+		}
+		return songList;
+	}
+
 	//	アルバムidで取る方法
 	public List<Song> getSongswithAlbumId(int albumIdToSearchSongs) throws Exception {
 		List<Song> songList = new ArrayList<>();
@@ -350,6 +391,7 @@ public class ProductDAO extends DAO {
 					song.setAlbumId(rs.getInt("album_id"));
 					song.setCategoryId(rs.getInt("category_id"));
 					song.setName(rs.getString("song_name"));
+					song.setAudioName(rs.getString("audio_name"));
 					song.setAlbumName(rs.getString("album_name"));
 					song.setAlbumImgName(rs.getString("album_img_name"));
 					song.setArtist(rs.getString("artist"));
@@ -414,6 +456,35 @@ public class ProductDAO extends DAO {
 		return purchaseHistoryList;
 	}
 
+	//	客とアルバムの関係の有無をチェック
+	public boolean checkSongStasus(int userId, int songId) throws Exception {
+		try (Connection con = getConnection();
+				PreparedStatement st = con.prepareStatement(
+						"select * from song_statuses where user_id = ? and song_id = ?")) {
+			st.setInt(1, userId);
+			st.setInt(2, songId);
+			try (ResultSet rs = st.executeQuery()) {
+				if (rs.next()) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	//	初カート追加処理
+	public int getSongIntoCartFTF(int userId, int songId) throws Exception {
+		try (Connection con = getConnection();
+				PreparedStatement st = con.prepareStatement(
+						"insert into song_statuses (user_id, song_id, status) values (?, ?, ?)")) {
+			st.setInt(1, userId);
+			st.setInt(2, songId);
+			st.setInt(3, 1);
+			int line = st.executeUpdate();
+			return line;
+		}
+	}
+
 	//	カート追加処理
 	public int getSongIntoCart(int userId, int songId) throws Exception {
 		try (Connection con = getConnection();
@@ -425,7 +496,7 @@ public class ProductDAO extends DAO {
 			return line;
 		}
 	}
-	
+
 	//	カート削除処理
 	public int removeSongFromCart(int userId, int songId) throws Exception {
 		try (Connection con = getConnection();
@@ -471,16 +542,16 @@ public class ProductDAO extends DAO {
 		}
 		return master;
 	}
-	
-//	public int changeAlbumsCategory(int albumId, int categoryId) throws Exception {
-//		try (Connection con = getConnection();
-//				PreparedStatement st = con.prepareStatement(
-//						"update albums set category_id = ? where id = ?")) {
-//			st.setInt(1, categoryId);
-//			st.setInt(2, albumId);
-//			int line = st.executeUpdate();
-//			return line;
-//		}
-//	}
+
+	//	public int changeAlbumsCategory(int albumId, int categoryId) throws Exception {
+	//		try (Connection con = getConnection();
+	//				PreparedStatement st = con.prepareStatement(
+	//						"update albums set category_id = ? where id = ?")) {
+	//			st.setInt(1, categoryId);
+	//			st.setInt(2, albumId);
+	//			int line = st.executeUpdate();
+	//			return line;
+	//		}
+	//	}
 
 }

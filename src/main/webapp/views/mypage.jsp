@@ -1,8 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@include file="simple-header.jsp"%>
-
 <%@taglib prefix="c" uri="jakarta.tags.core"%>
+
+<%
+String currentPage = "mypage.jsp";
+session.setAttribute("currentPage", currentPage);
+%>
+
 <h1>MyPage</h1>
 <h3>登録情報一覧</h3>
 <p>ユーザーid：${user.id}</p>

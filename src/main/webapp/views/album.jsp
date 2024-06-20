@@ -26,7 +26,7 @@
 <!-- 新着一覧出力 -->
 <!-- 今週のシングル -->
 <c:if
-	test="${singleListWeekly.size() != 0}">
+	test="${singleListWeekly != null &&singleListWeekly.size() != 0}">
 	<h3>今週のシングル</h3>
 	<c:forEach var="singleList" items="${singleListWeekly}" begin="0"
 		end="12">
@@ -43,7 +43,7 @@
 </c:if>
 
 <!-- 今週のアルバム -->
-<c:if test="${albumListWeekly.size() != 0}">
+<c:if test="${albumListWeekly != null && albumListWeekly.size() != 0}">
 	<h3>今週のアルバム</h3>
 	<c:forEach var="albumList" items="${albumListWeekly}" begin="0"
 		end="12">
@@ -61,7 +61,7 @@
 
 <!-- 先週のシングル -->
 <c:if
-	test="${singleListLastWeekly.size() != 0}">
+	test="${singleListLastWeekly != null && singleListLastWeekly.size() != 0}">
 	<h3>先週のシングル</h3>
 	<c:forEach var="singleList" items="${singleListLastWeekly}" begin="0"
 		end="12">
@@ -78,7 +78,7 @@
 </c:if>
 
 <!-- 先週のアルバム -->
-<c:if test="${albumListLastWeekly.size() != 0}">
+<c:if test="${albumListLastWeekly != null && albumListLastWeekly.size() != 0}">
 	<h3>先週のアルバム</h3>
 	<c:forEach var="albumList" items="${albumListLastWeekly}" begin="0"
 		end="12">
@@ -96,11 +96,11 @@
 
 
 <!-- ランキング一覧出力 -->
-<!-- 今日発売の人気アルバム -->
+<!-- 人気アルバム -->
 <c:if
-	test="${albumTrafficListDaily !=  null && albumTrafficListDaily.size() != 0}">
-	<h3>今日の人気アルバム</h3>
-	<c:forEach var="albumList" items="${albumTrafficListDaily}" begin="0"
+	test="${albumListTraffic !=  null && albumListTraffic.size() != 0}">
+	<h3>人気アルバム</h3>
+	<c:forEach var="albumList" items="${albumListTraffic}" begin="0"
 		end="12">
 		<a href="SearchSong.action?searchSongId=${albumList.id}">
 			<div>
@@ -114,84 +114,12 @@
 	</c:forEach>
 </c:if>
 
-<!-- 今週発売の人気アルバム -->
+<!-- 人気シングル -->
 <c:if
-	test="${albumTrafficListWeekly !=  null && albumTrafficListWeekly.size() != 0}">
-	<h3>今週の人気アルバム</h3>
-	<c:forEach var="albumList" items="${albumTrafficListWeekly}" begin="0"
-		end="12">
-		<a href="SearchSong.action?searchSongId=${albumList.id}">
-			<div>
-				<img src="../image/album/${albumList.id}.jpg" alt="product image">
-				<p>${albumList.name}</p>
-				<br>
-				<p>${albumList.artist}</p>
-				<br>
-			</div>
-		</a>
-	</c:forEach>
-</c:if>
-
-<!-- 今月発売の人気アルバム -->
-<c:if
-	test="${albumTrafficListMonthly !=  null && albumTrafficListMonthly.size() != 0}">
-	<h3>今月の人気アルバム</h3>
-	<c:forEach var="albumList" items="${albumTrafficListMonthly}" begin="0"
-		end="12">
-		<a href="SearchSong.action?searchSongId=${albumList.id}">
-			<div>
-				<img src="../image/album/${albumList.id}.jpg" alt="product image">
-				<p>${albumList.name}</p>
-				<br>
-				<p>${albumList.artist}</p>
-				<br>
-			</div>
-		</a>
-	</c:forEach>
-</c:if>
-
-<!-- 今日発売の人気シングル -->
-<c:if
-	test="${singleTrafficListDayly !=  null && singleTrafficListDayly.size() != 0}">
+	test="${singleListTraffic !=  null && singleListTraffic.size() != 0}">
 	<h3>今日の人気シングル</h3>
-	<c:forEach var="albumList" items="${singleTrafficListDayly}" begin="0"
+	<c:forEach var="albumList" items="${singleListTraffic}" begin="0"
 		end="12">
-		<a href="SearchSong.action?searchSongId=${albumList.id}">
-			<div>
-				<img src="../image/album/${albumList.id}.jpg" alt="product image">
-				<p>${albumList.name}</p>
-				<br>
-				<p>${albumList.artist}</p>
-				<br>
-			</div>
-		</a>
-	</c:forEach>
-</c:if>
-
-<!-- 今週発売の人気シングル -->
-<c:if
-	test="${singleTrafficListWeekly !=  null && singleTrafficListWeekly.size() != 0}">
-	<h3>今週の人気シングル</h3>
-	<c:forEach var="albumList" items="${singleTrafficListWeekly}" begin="0"
-		end="12">
-		<a href="SearchSong.action?searchSongId=${albumList.id}">
-			<div>
-				<img src="../image/album/${albumList.id}.jpg" alt="product image">
-				<p>${albumList.name}</p>
-				<br>
-				<p>${albumList.artist}</p>
-				<br>
-			</div>
-		</a>
-	</c:forEach>
-</c:if>
-
-<!-- 今月発売の人気シングル -->
-<c:if
-	test="${singleTrafficListMonthly !=  null && singleTrafficListMonthly.size() != 0}">
-	<h3>今月の人気シングル</h3>
-	<c:forEach var="albumList" items="${singleTrafficListMonthly}"
-		begin="0" end="12">
 		<a href="SearchSong.action?searchSongId=${albumList.id}">
 			<div>
 				<img src="../image/album/${albumList.id}.jpg" alt="product image">
@@ -266,6 +194,24 @@
 				<img src="../image/category/${categoryList.imgName}"
 					alt="category image">
 				<p>${categoryList.name}</p>
+			</div>
+		</a>
+	</c:forEach>
+</c:if>
+
+<!-- 閲覧履歴出力 -->
+<c:if test="${albumListHisotry != null && user != null}">
+	<h2>閲覧履歴</h2>
+	<c:forEach var="albumListHisotry" items="${albumListHisotry}"
+		begin="0" end="4">
+		<a href="SearchSong.action?searchSongId=${albumListHisotry.id}">
+			<div>
+				<img src="../image/album/${albumListHisotry.id}.jpg"
+					alt="product image">
+				<p>${albumListHisotry.name}</p>
+				<br>
+				<p>${albumListHisotry.artist}</p>
+				<br>
 			</div>
 		</a>
 	</c:forEach>

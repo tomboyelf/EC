@@ -26,6 +26,7 @@ session.setAttribute("currentPage", currentPage);
 			end="12">
 			<div>
 				<p>${songList.name}</p>
+				<audio src="../audio/${songList.audioName}" controls preload="auto"></audio>
 				<a href="CartAdd.action?addCartId=${songList.id}"> 
 					<p>￥${songList.price}</p>
 				</a>
@@ -33,7 +34,6 @@ session.setAttribute("currentPage", currentPage);
 		</c:forEach>
 	</c:when>
 	<c:otherwise>
-		<p>どういうわけか、このアルバムには曲が入っていません。</p>
 	</c:otherwise>
 </c:choose>
 

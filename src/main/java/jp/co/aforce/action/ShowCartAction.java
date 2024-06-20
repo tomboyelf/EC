@@ -23,20 +23,8 @@ public class ShowCartAction extends Action {
 			return "login.jsp";
 		}
 
-		//		カートから削除
-		if (request.getParameter("songId") != null) {
-
-			int line = dao.removeSongFromCart(user.getId(), Integer.parseInt(request.getParameter("songId")));
-			if (line > 0) {
-				request.setAttribute("completeMsg", msg.getCompleteMsg(5));
-				List<Integer> inCartList = dao.getInCartList(user.getId());
-				session.setAttribute("inCartList", inCartList);
-				return "cart.jsp";
-			}
-		}
-
-		//		カートが空なら
 		List<Integer> inCartList = dao.getInCartList(user.getId());
+		//		カートが空なら
 		if (inCartList == null || inCartList.size() == 0) {
 			request.setAttribute("purchaseErrorMsg", msg.getPurchaseErrorMsg(5));
 			return "cart.jsp";

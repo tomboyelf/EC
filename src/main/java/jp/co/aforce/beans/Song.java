@@ -6,8 +6,9 @@ public class Song implements java.io.Serializable {
 
 	private int id;
 	private int albumId;
-	private String categoryName;
+	private String audioName;
 	private int categoryId;
+	private String categoryName;
 	private String name;
 	private String albumName;
 	private String albumImgName;
@@ -23,6 +24,25 @@ public class Song implements java.io.Serializable {
 		this.price = price;
 		this.createdAt = createdAt;
 		this.updatedAt = updatedAt;
+	}
+	
+//	管理者側曲情報登録用
+	public Song(int albumId, String audioName, String name, String albumName, int price) {
+		this.albumId = albumId;
+		this.audioName = audioName;
+		this.name = name;
+		this.albumName = albumName;
+		this.price = price;
+	}
+	
+//	管理者側曲情報変更用
+	public Song(int id, int albumId, String audioName, String name, String albumName, int price) {
+		this.id = id;
+		this.albumId = albumId;
+		this.audioName = audioName;
+		this.name = name;
+		this.albumName = albumName;
+		this.price = price;
 	}
 
 	public Song() {
@@ -44,6 +64,14 @@ public class Song implements java.io.Serializable {
 		this.albumId = albumId;
 	}
 	
+	
+	public String getAudioName() {
+		return audioName;
+	}
+	
+	public void setAudioName(String audioName) {
+		this.audioName = audioName;
+	}
 	
 	public String getCategoryName() {
 		return categoryName;

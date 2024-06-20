@@ -4,6 +4,10 @@
 <%@taglib prefix="c" uri="jakarta.tags.core"%>
 
 <c:choose>
+	<c:when test="${completeMsg003 != null}">
+		<p>${completeMsg003}</p>
+		<a href="download.jsp">ダウンロードページへ</a>
+	</c:when>
 	<c:when test="${completeMsg != null}">
 		<p>${completeMsg}</p>
 		<a href="index.jsp">ホームへ戻る</a>

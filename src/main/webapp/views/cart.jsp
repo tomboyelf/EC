@@ -3,6 +3,9 @@
 <%@include file="header.jsp"%>
 
 <%
+String currentPage = "cart.jsp";
+session.setAttribute("currentPage", currentPage);
+
 List<Integer> inCartList = (List<Integer>) session.getAttribute("inCartList");
 List<Master> cartInfo = new ArrayList<>();
 ProductDAO dao = new ProductDAO();
@@ -15,9 +18,9 @@ pageContext.setAttribute("cartInfo", cartInfo);
 <p>${purchaseErrorMsg}</p>
 <p>${completeMsg}</p>
 
-<c:if test="${cartInfo != null}">
+<c:if test="${cartInfo.size() != 0}">
 	<c:forEach var="cartItem" items="${cartInfo}">
-		<form action="ShowCart.action" method="post">
+		<form action="Delete.action?deleteId=cart" method="post">
 			<input type="hidden" name="songId" value="${cartItem.songId}">
 			<input type="submit" value="削除">
 		</form>

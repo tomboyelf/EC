@@ -47,8 +47,14 @@ public class CartAddAction extends Action {
 
 		//		↑↑↑↑
 		//		ここまで鰹節
-
-		int line = dao.getSongIntoCart(user.getId(), songId);
+		
+		int line;
+		
+		if(dao.checkSongStasus(user.getId(), songId)) {
+			line = dao.getSongIntoCart(user.getId(), songId);
+		} else {
+			line = dao.getSongIntoCartFTF(user.getId(), songId);
+		}
 		if (line > 0) {
 			//				追加後の新しいカートを取得
 			inCartList = dao.getInCartList(user.getId());

@@ -131,6 +131,7 @@ public class SignupAction extends Action {
 			int line = dao.quit(user.getId());
 			if (line >= 1) {
 				request.setAttribute("completeMsg", msg.getCompleteMsg(6));
+				session.removeAttribute("user");
 				return "message.jsp";
 			} else {
 				request.setAttribute("signupErrorMsg009", msg.getSignupErrorMsg(9));

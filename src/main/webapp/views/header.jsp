@@ -3,6 +3,7 @@
 <%@ page import="java.util.ArrayList"%>	
 <%@ page import="java.util.List"%>
 <%@ page import="jp.co.aforce.beans.Master"%>
+<%@ page import="jp.co.aforce.beans.Song"%>
 <%@ page import="jp.co.aforce.dao.ProductDAO"%>
 
 <!DOCTYPE html>
