@@ -11,6 +11,10 @@ public class LogoutAction extends Action {
 		HttpSession session = request.getSession();
 
 		session.removeAttribute("user");
+		session.removeAttribute("albumListHisotry");
+		session.removeAttribute("inCartList");
+		session.removeAttribute("purchaseHistoryList");
+		session.removeAttribute("cartInfo");
 		return "index.jsp";
 	}
 

@@ -19,6 +19,9 @@ public class SignupAction extends Action {
 		HttpSession session = request.getSession();
 		response.setContentType("text/html; charset=UTF-8");
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		Message msg = new Message();
+		UserDAO dao = new UserDAO();
+		List<Integer> duplicationErrorMessageList = new ArrayList<>();
 
 		//		入力フォームの値を取得
 		String username = request.getParameter("username");
@@ -26,58 +29,196 @@ public class SignupAction extends Action {
 		String lastname = request.getParameter("lastname");
 		String firstname = request.getParameter("firstname");
 		String sex = request.getParameter("sex");
+		String mailaddress = request.getParameter("mailaddress");
+
+		String newUsername = request.getParameter("newUsername");
+		String newPassword = request.getParameter("newPassword");
+		String newMailaddress = request.getParameter("newMailaddress");
+		
+		//		マイページのアカウント設定
+		//		パスワード編
+		if (request.getParameter("optionId") != null && request.getParameter("optionId").equals("password")) {
+			User user = (User) session.getAttribute("user");
+
+			//			鰹節
+			if (user == null) {
+				return "login.jsp";
+			}
+
+			//			正規表現と照合
+			List<Integer> errorMessageList = new ArrayList<>();
+			errorMessageList = Valid.validCheckForPassword(newPassword);
+
+			//			問題があればメッセージを返す
+			if (errorMessageList.size() != 0) {
+				for (int i : errorMessageList) {
+					request.setAttribute("signupErrorMsg00" + i, msg.getSignupErrorMsg(i));
+				}
+				if (user.getPassword() != password) {
+					request.setAttribute("loginErrorMsg001", msg.getLoginErrorMsg(1));
+				}
+				return "option.jsp";
+			}
+
+			//			問題なければ登録し再ログイン
+			if (dao.insertPassword(newPassword, user.getId()) > 0) {
+				user = dao.login(user.getUsername(), newPassword);
+				session.setAttribute("user", user);
+				request.setAttribute("completeMsg", msg.getCompleteMsg(4));
+				return "message.jsp";
+			} else {
+				request.setAttribute("signupErrorMsg", msg.getSignupErrorMsg(7));
+				return "option.jsp";
+			}
+		}
+
+		//		メールアドレス編
+		if (request.getParameter("optionId") != null && request.getParameter("optionId").equals("mailaddress")) {
+			User user = (User) session.getAttribute("user");
+
+			//			鰹節
+			if (user == null) {
+				return "login.jsp";
+			}
+
+			if (!user.getMailaddress().equals(mailaddress)) {
+				request.setAttribute("signupErrorMsg008", msg.getSignupErrorMsg(8));
+				return "option.jsp";
+			}
+
+			//			正規表現と照合
+			//			006
+			List<Integer> errorMessageList = new ArrayList<>();
+			errorMessageList = Valid.validCheckForMailaddress(newMailaddress);
+
+			//			dbの重複チェック
+			//			001
+			try {
+				duplicationErrorMessageList = dao.duplicationCheckForMailaddress(newMailaddress);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			errorMessageList.addAll(duplicationErrorMessageList);
+
+			//			問題があればメッセージを返す
+			if (errorMessageList.size() != 0) {
+				for (int i : errorMessageList) {
+					request.setAttribute("signupErrorMsg00" + i, msg.getSignupErrorMsg(i));
+				}
+				return "option.jsp";
+			}
+
+			//			問題なければ登録し再ログイン
+			if (dao.insertMailaddress(newMailaddress, user.getId()) > 0) {
+				user = dao.login(user.getUsername(), user.getPassword());
+				session.setAttribute("user", user);
+				request.setAttribute("completeMsg", msg.getCompleteMsg(4));
+				return "message.jsp";
+			} else {
+				request.setAttribute("signupErrorMsg007", msg.getSignupErrorMsg(7));
+				return "option.jsp";
+			}
+		}
+
+		//		退会編
+		if (request.getParameter("optionId") != null && request.getParameter("optionId").equals("quit")) {
+			User user = (User) session.getAttribute("user");
+			//			鰹節
+			if (user == null) {
+				return "login.jsp";
+			}
+
+			int line = dao.quit(user.getId());
+			if (line >= 1) {
+				request.setAttribute("completeMsg", msg.getCompleteMsg(6));
+				session.removeAttribute("user");
+				return "message.jsp";
+			} else {
+				request.setAttribute("signupErrorMsg009", msg.getSignupErrorMsg(9));
+				return "option.jsp";
+			}
+		}
+
 		int birthYear = Integer.parseInt(request.getParameter("birth-year"));
 		int birthMonth = Integer.parseInt(request.getParameter("birth-month"));
 		int birthDay = Integer.parseInt(request.getParameter("birth-day"));
-		String mailaddress = request.getParameter("mailaddress");
+		//		バラバラにとってきた３つをつなげる
+		String birthdateString = birthYear + "-" + birthMonth + "-" + birthDay;
+		//		String型→util.Date→sql.Date
+		//		sqlへ入れるためのキャスト
+		java.util.Date birthdateUtil = dateFormat.parse(birthdateString);
+		java.sql.Date birthdate = new java.sql.Date(birthdateUtil.getTime());
 
-		//		先へ進む前に重複チェック
-		UserDAO dao = new UserDAO();
-		List<Integer> duplicationErrorMessageList = new ArrayList<>();
+		//		マイページのアカウント設定
+		//		ユーザーネーム編
+		if (request.getParameter("optionId") != null && request.getParameter("optionId").equals("profile")) {
+			User user = (User) session.getAttribute("user");
+
+			//			鰹節
+			if (user == null) {
+				return "login.jsp";
+			}
+			//			dbの重複チェック
+			try {
+				//				重複してたら0が入る
+				duplicationErrorMessageList = dao.duplicationCheckForUsername(newUsername);
+			} catch (Exception e) {
+				e.printStackTrace();
+				request.setAttribute("signupErrorMsg", msg.getSignupErrorMsg(7));
+			}
+
+			//			正規表現と照合
+			List<Integer> errorMessageList = new ArrayList<>();
+			//			正規表現と合わなかったら2が入る
+			errorMessageList = Valid.validCheckForUsername(newUsername);
+			errorMessageList.addAll(duplicationErrorMessageList);
+
+			//			問題があればメッセージを返す
+			if (errorMessageList.size() != 0) {
+				for (int i : errorMessageList) {
+					request.setAttribute("signupErrorMsg00" + i, msg.getSignupErrorMsg(i));
+				}
+				return "option.jsp";
+			}
+
+			//			問題なければ登録し再ログイン
+			if (dao.insertProfile(newUsername, sex, birthdate, user.getId()) > 0) {
+				user = dao.login(newUsername, user.getPassword());
+				session.setAttribute("user", user);
+				request.setAttribute("completeMsg", msg.getCompleteMsg(4));
+				return "message.jsp";
+			} else {
+				request.setAttribute("signupErrorMsg", msg.getSignupErrorMsg(7));
+				return "option.jsp";
+			}
+		}
+
+		//		ここから新規登録
 		try {
 			duplicationErrorMessageList = dao.duplicationCheck(username, mailaddress);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		//		次に正規表現と照合
-		Valid valid = new Valid();
 		List<Integer> errorMessageList = new ArrayList<>();
-		errorMessageList = valid.validCheck(username, password, lastname, firstname, mailaddress);
+		errorMessageList = Valid.validCheck(username, password, lastname, firstname, mailaddress);
 		errorMessageList.addAll(duplicationErrorMessageList);
 		//		errorMessageListリストに入った数字でエラーメッセージを呼び出す
 
+		//入力内容に問題があれば入力画面へメッセージとともに飛ばす
 		if (errorMessageList.size() != 0) {
-			Message msg = new Message();
 			for (int i : errorMessageList) {
 				request.setAttribute("signupErrorMsg00" + i, msg.getSignupErrorMsg(i));
 			}
 			return "signup.jsp";
 		}
-
+			
 		//入力内容に問題がなければbeanに入れて確認画面へ飛ばす
 		if (errorMessageList.size() == 0) {
-			//		バラバラにとってきた３つをつなげる
-			String birthdateString = birthYear + "-" + birthMonth + "-" + birthDay;
-			//		String型→util.Date→sql.Date
-			//		sqlへ入れるためのキャスト
-			java.util.Date birthdateUtil = dateFormat.parse(birthdateString);
-			java.sql.Date birthdate = new java.sql.Date(birthdateUtil.getTime());
-
 			//		beanへ格納
-			User notTrueFinalRealuser = new User(username, password, lastname, firstname, sex, birthdate, mailaddress);
-			System.out.println("name:" + notTrueFinalRealuser.getUsername());
-			session.setAttribute("notTrueFinalRealuser", notTrueFinalRealuser);
+			User confirmUser = new User(username, password, lastname, firstname, sex, birthdate, mailaddress);
+			request.setAttribute("confirmUser", confirmUser);
 		}
-		return "signup-confirm.jsp";
-
-		//		try {
-		//			UserDAO dao=new UserDAO();
-		//			int line=dao.insert(user);
-		//			return "index.jsp";
-		//		} catch(Exception e) {
-		//			e.printStackTrace();
-		//			return "signup.jsp";
-		//		}
+		return "confirm.jsp";
 	}
-
 }
