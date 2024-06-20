@@ -32,38 +32,34 @@ public class UploadSongAudioServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		HttpSession session = request.getSession();
-		User user = (User)session.getAttribute("user");
+		User user = (User) session.getAttribute("user");
 		ProductDAO productDao = new ProductDAO();
 		Album album = new Album();
-		
-//		鰹節
-		if(user == null) {
+
+		//		鰹節
+		if (user == null) {
 			response.sendRedirect("views/login.jsp");
 		}
 		//		inputからファイルを取得
 		Part part = request.getPart("file");
-		
-//		新情報
+
+		//		新情報
 		String audioName = this.getFileName(part);
 		String newName = request.getParameter("songName");
 		int albumId = Integer.parseInt(request.getParameter("albumOption"));
 		int price = Integer.parseInt(request.getParameter("price"));
-		
+
 		try {
 			album = productDao.getSpecificAlbum(albumId);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		System.out.println("画像名、アルバム名、アーティスト、カテゴリId:" + audioName + newName + price + albumId);
-		
 
 		///////////////////////////////////////////////
-		//		ファイルがnullだったら、もしくは名前が空白だったら
-		if (part == null) {
-			response.sendRedirect("views/admin-index.jsp");
-		}
-		if (audioName.equals("")) {
+		//ファイルがnullだったら、もしくは名前が空白だったら
+		if (part == null || audioName.equals("")) {
 			response.sendRedirect("views/admin-index.jsp");
 		}
 
@@ -76,7 +72,7 @@ public class UploadSongAudioServlet extends HttpServlet {
 			fileList.add(file.getName());
 		}
 
-		//		フォルダがなかった場合、作る
+		//フォルダがなかった場合、作る
 		String uploadDirPath = getServletContext().getRealPath("/audio");
 		File uploadDir = new File(uploadDirPath);
 		if (!uploadDir.exists()) {
@@ -85,9 +81,9 @@ public class UploadSongAudioServlet extends HttpServlet {
 		String filePath = "C:\\pleiades-2024-03-java-win-64bit-jre_20240325\\workspace\\ShoppingSite\\src\\main\\webapp\\audio"
 				+ File.separator + audioName;
 
-		//		フォルダ内にすでにファイル名が存在する場合
+		//フォルダ内にすでにファイル名が存在する場合
 		if (fileList.contains(audioName)) {
-			//			存在しない場合
+			//存在しない場合
 		} else if (!fileList.contains(audioName)) {
 			try {
 				part.write(filePath);
@@ -97,16 +93,16 @@ public class UploadSongAudioServlet extends HttpServlet {
 			}
 		}
 		///////////////////////////////////////////////
-		
+
 		Song song = new Song(albumId, audioName, newName, album.getName(), price);
 		request.setAttribute("newSong", song);
-//
+		//
 		try {
 			Thread.sleep(5000);
 			request.getRequestDispatcher("views/confirm.jsp").forward(request, response);
-		} catch(InterruptedException e){
+		} catch (InterruptedException e) {
 			e.printStackTrace();
-		}  
+		}
 	}
 
 	private String getFileName(Part part) {

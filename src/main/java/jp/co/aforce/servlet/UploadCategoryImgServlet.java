@@ -15,7 +15,6 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 import jp.co.aforce.beans.Category;
 import jp.co.aforce.beans.User;
-import jp.co.aforce.dao.ProductDAO;
 
 @WebServlet("/UploadCategoryImgServlet")
 @MultipartConfig(location = "C:\\pleiades-2024-03-java-win-64bit-jre_20240325\\workspace\\ShoppingSite\\src\\main\\webapp\\WEB-INF\\upload")
@@ -33,7 +32,6 @@ public class UploadCategoryImgServlet extends HttpServlet {
 		
 		HttpSession session = request.getSession();
 		User user = (User)session.getAttribute("user");
-		ProductDAO dao = new ProductDAO();
 		Category category = new Category();
 		
 //		鰹節
@@ -50,10 +48,7 @@ public class UploadCategoryImgServlet extends HttpServlet {
 
 		///////////////////////////////////////////////
 		//		ファイルがnullだったら、もしくは名前が空白だったら
-		if (part == null) {
-			response.sendRedirect("views/admin-index.jsp");
-		}
-		if (imgName.equals("")) {
+		if (part == null || imgName.equals("")) {
 			response.sendRedirect("views/admin-index.jsp");
 		}
 

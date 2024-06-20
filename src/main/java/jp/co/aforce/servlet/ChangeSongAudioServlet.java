@@ -46,10 +46,7 @@ public class ChangeSongAudioServlet extends HttpServlet {
 		
 		///////////////////////////////////////////////
 		//		ファイルがnullだったら、もしくは名前が空白だったら
-		if (part == null) {
-			response.sendRedirect("views/admin-index.jsp");
-		}
-		if (audioName.equals("")) {
+		if (part == null || audioName.equals("")) {
 			response.sendRedirect("views/admin-index.jsp");
 		}
 

@@ -46,10 +46,7 @@ public class ChangeAlbumImgServlet extends HttpServlet {
 		
 		///////////////////////////////////////////////
 		//		ファイルがnullだったら、もしくは名前が空白だったら
-		if (part == null) {
-			response.sendRedirect("views/admin-index.jsp");
-		}
-		if (imgName.equals("")) {
+		if (part == null || imgName.equals("")) {
 			response.sendRedirect("views/admin-index.jsp");
 		}
 

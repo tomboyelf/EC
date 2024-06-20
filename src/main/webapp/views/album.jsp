@@ -26,7 +26,7 @@
 <!-- 新着一覧出力 -->
 <!-- 今週のシングル -->
 <c:if
-	test="${singleListWeekly != null &&singleListWeekly.size() != 0}">
+	test="${singleListWeekly != null && singleListWeekly.size() != 0}">
 	<h3>今週のシングル</h3>
 	<c:forEach var="singleList" items="${singleListWeekly}" begin="0"
 		end="12">

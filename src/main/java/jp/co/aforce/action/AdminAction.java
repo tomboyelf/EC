@@ -100,30 +100,37 @@ public class AdminAction extends Action {
 			if (request.getParameter("songChangeId").equals("nameChange")) {
 				int songId = Integer.parseInt(request.getParameter("oldSongId"));
 				Song oldSong = productDao.getSpecificSong(songId);
+				
 				String newName = request.getParameter("name");
+				
 				Song newSong = new Song(songId, oldSong.getAlbumId(), oldSong.getAudioName(), newName, oldSong.getAlbumName(), oldSong.getPrice());
 				request.setAttribute("oldSong", oldSong);
 				request.setAttribute("newSong", newSong);
 				return "confirm.jsp";
 			}
-////			if (request.getParameter("songChangeId").equals("priceChange")) {
-//				int songId = Integer.parseInt(request.getParameter("songId"));
-//				Song oldSong = dao.getSpecificSong(songId);
-//				int newPrice = Integer.parseInt(request.getParameter("price"));
-//				Song newSong = new Song(songId, oldSong.getAlbumId(), newName, oldSong.getAlbumName(), oldSong.getPrice());
-//				request.setAttribute("oldSong", oldSong);
-//				request.setAttribute("newSong", newSong);
-//				return "confirm.jsp";
-//			}
-//			if (request.getParameter("songChangeId").equals("albumChange")) {
-//				int songId = Integer.parseInt(request.getParameter("songId"));
-//				Song oldSong = dao.getSpecificSong(songId);
-//				request.getParameter("albumOption");
-//				Song newSong = new Song(songId, oldSong.getAlbumId(), newName, oldSong.getAlbumName(), oldSong.getPrice());
-//				request.setAttribute("oldSong", oldSong);
-//				request.setAttribute("newSong", newSong);
-//				return "confirm.jsp";
-//			}
+			if (request.getParameter("songChangeId").equals("priceChange")) {
+				int songId = Integer.parseInt(request.getParameter("oldSongId"));
+				Song oldSong = productDao.getSpecificSong(songId);
+				
+				int newPrice = Integer.parseInt(request.getParameter("price"));
+				
+				Song newSong = new Song(songId, oldSong.getAlbumId(), oldSong.getAudioName(), oldSong.getName(), oldSong.getAlbumName(), newPrice);
+				request.setAttribute("oldSong", oldSong);
+				request.setAttribute("newSong", newSong);
+				return "confirm.jsp";
+			}
+			if (request.getParameter("songChangeId").equals("albumChange")) {
+				int songId = Integer.parseInt(request.getParameter("oldSongId"));
+				Song oldSong = productDao.getSpecificSong(songId);
+				
+				int newAlbumId = Integer.parseInt(request.getParameter("albumOption"));
+				Album album = productDao.getSpecificAlbum(newAlbumId);
+				
+				Song newSong = new Song(songId, newAlbumId, oldSong.getAudioName(), oldSong.getName(), album.getName(), oldSong.getPrice());
+				request.setAttribute("oldSong", oldSong);
+				request.setAttribute("newSong", newSong);
+				return "confirm.jsp";
+			}
 		}
 		
 		System.out.println("seikou");

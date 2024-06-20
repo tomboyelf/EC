@@ -39,13 +39,13 @@
 	<c:when test="${songList.size() != 0 && songList != null}">
 		<h2>新規曲登録</h2>
 		<form method="POST" enctype="multipart/form-data" action="/ShoppingSite/UploadSongAudioServlet">
-				<select name="albumOption">
-					<c:forEach var="album" items="${albumOption}">
-						<option value="${album.id}" form="next">${album.name}</option>
-					</c:forEach>
-				</select>
+			<select name="albumOption">
+				<c:forEach var="album" items="${albumOption}">
+					<option value="${album.id}" form="next">${album.name}</option>
+				</c:forEach>
+			</select>
 			<p>曲名</p><input type="text" name="songName" required /><br>
-			<p>値段</p><input type="text" name="price" required /><br>
+			<p>値段</p><input type="number" name="price" required /><br>
 			<p>音源</p><input type="file" name="file" required /><br>
 			<input type="submit" value="登録" />
 		</form>
@@ -70,7 +70,7 @@
 				<input type="hidden" name="categoryId" value="${category.id}">
 				<input type="submit" value="名前を変更" />
 			</form>
-		<c:if test="${albumListSortedByCategory.size() != 0}">
+		<c:if test="${albumListSortedByCategory != null && albumListSortedByCategory.size() != 0}">
 			<h2>${category.name}のアルバム、シングル一覧</h2>
 			<c:forEach var="album" items="${albumListSortedByCategory}">
 				<p>${album.name}</p>
@@ -106,7 +106,7 @@
 				</select> 
 				<input type="submit" value="変更を適用" />
 			</form>
-		<c:if test="${songListWithAlbumId.size() != 0}">
+		<c:if test="${songListWithAlbumId != null && songListWithAlbumId.size() != 0}">
 			<h2>${album.name}の曲一覧</h2>
 			<c:forEach var="song" items="${songListWithAlbumId}">
 				<p>${song.name}</p>
@@ -115,14 +115,14 @@
 	</c:when>
 	
 	<c:when test="${song != null}">
-	<audio src="../audio/${song.audioName}" controls preload="auto"></audio>
+		<audio src="../audio/${song.audioName}" controls preload="auto"></audio>
 		<form method="post" action="Admin.action?songChangeId=nameChange">
 			<input type="text" name="name" value="${song.name}" required /><br>
 			<input type="hidden" name="oldSongId" value="${song.id}">
 			<input type="submit" value="変更を適用" />
 		</form>
 		<form method="post" action="Admin.action?songChangeId=priceChange">
-			<input type="text" name="price" value="${song.price}" required /><br>
+			<input type="number" name="price" value="${song.price}" required /><br>
 			<input type="hidden" name="oldSongId" value="${song.id}">
 			<input type="submit" value="変更を適用" />
 		</form>

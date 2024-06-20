@@ -59,12 +59,13 @@ public class ProductDAO extends DAO {
 		Song song = new Song();
 		try (Connection con = getConnection();
 				PreparedStatement st = con.prepareStatement(
-						"select * from songs where id = ?")) {
+						"select * from master_view where song_id = ?")) {
 			st.setInt(1, songId);
 			try (ResultSet rs = st.executeQuery()) {
 				while (rs.next()) {
-					song.setId(rs.getInt("id"));
+					song.setId(rs.getInt("song_id"));
 					song.setAlbumId(rs.getInt("album_id"));
+					song.setAlbumName(rs.getString("album_name"));
 					song.setAudioName(rs.getString("audio_name"));
 					song.setName(rs.getString("song_name"));
 					song.setPrice(rs.getInt("price"));
