@@ -17,6 +17,7 @@ import jp.co.aforce.beans.Album;
 import jp.co.aforce.beans.Song;
 import jp.co.aforce.beans.User;
 import jp.co.aforce.dao.ProductDAO;
+import jp.co.aforce.tool.Message;
 
 @WebServlet("/UploadSongAudioServlet")
 @MultipartConfig(location = "C:\\pleiades-2024-03-java-win-64bit-jre_20240325\\workspace\\ShoppingSite\\src\\main\\webapp\\WEB-INF\\upload")
@@ -35,6 +36,7 @@ public class UploadSongAudioServlet extends HttpServlet {
 		User user = (User) session.getAttribute("user");
 		ProductDAO productDao = new ProductDAO();
 		Album album = new Album();
+		Message msg = new Message();
 
 		//		鰹節
 		if (user == null) {
@@ -60,7 +62,8 @@ public class UploadSongAudioServlet extends HttpServlet {
 		///////////////////////////////////////////////
 		//ファイルがnullだったら、もしくは名前が空白だったら
 		if (part == null || audioName.equals("")) {
-			response.sendRedirect("views/admin-index.jsp");
+			request.setAttribute("adminErrorMsg", msg.getAdminErrorMsg(0));
+			response.sendRedirect("views/admin-message.jsp");
 		}
 
 		//		画像の保存先フォルダに、すでにある画像の名前一覧を取得し、ファイル名と比較
@@ -89,7 +92,8 @@ public class UploadSongAudioServlet extends HttpServlet {
 				part.write(filePath);
 				System.out.println("File saved to: " + filePath);
 			} catch (IOException e) {
-				System.out.println("Failed to save file: " + e.getMessage());
+				request.setAttribute("adminErrorMsg", msg.getAdminErrorMsg(0));
+				response.sendRedirect("views/admin-message.jsp");
 			}
 		}
 		///////////////////////////////////////////////

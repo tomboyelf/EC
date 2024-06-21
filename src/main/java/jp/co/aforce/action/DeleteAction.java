@@ -71,11 +71,11 @@ public class DeleteAction extends Action {
 				try {
 					adminDao.deleteSong(Integer.parseInt(request.getParameter("songId")));
 					request.setAttribute("adminCompleteMsg005", msg.getAdminCompleteMsg(5));
-					return "confirm.jsp";
+					return "admin-message.jsp";
 				} catch (Exception e) {
 					request.setAttribute("adminCompleteMsg006", msg.getAdminCompleteMsg(6));
 					e.printStackTrace();
-					return "confirm.jsp";
+					return "admin-message.jsp";
 				}
 			}
 
@@ -84,11 +84,11 @@ public class DeleteAction extends Action {
 				try {
 					adminDao.deleteAlbum(Integer.parseInt(request.getParameter("albumId")));
 					request.setAttribute("adminCompleteMsg005", msg.getAdminCompleteMsg(5));
-					return "confirm.jsp";
+					return "admin-message.jsp";
 				} catch (Exception e) {
 					request.setAttribute("adminCompleteMsg007", msg.getAdminCompleteMsg(7));
 					e.printStackTrace();
-					return "confirm.jsp";
+					return "admin-message.jsp";
 				}
 			}
 
@@ -97,11 +97,11 @@ public class DeleteAction extends Action {
 				try {
 					adminDao.deleteCategory(Integer.parseInt(request.getParameter("categoryId")));
 					request.setAttribute("adminCompleteMsg005", msg.getAdminCompleteMsg(5));
-					return "confirm.jsp";
+					return "admin-message.jsp";
 				} catch (Exception e) {
 					request.setAttribute("adminCompleteMsg007", msg.getAdminCompleteMsg(7));
 					e.printStackTrace();
-					return "confirm.jsp";
+					return "admin-message.jsp";
 				}
 			}
 		}

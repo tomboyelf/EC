@@ -100,11 +100,27 @@ public class AdminDAO extends DAO {
 
 	//	曲削除
 	public void deleteSong(int songId) throws Exception {
-		try (Connection con = getConnection();
-				PreparedStatement st = con.prepareStatement(
-						"DELETE songs, song_statuses FROM song_statuses INNER JOIN songs ON song_statuses.song_id = songs.id WHERE song_statuses.song_id = ?")) {
-			st.setInt(1, songId);
-			st.executeUpdate();
+		Connection con = getConnection();
+		PreparedStatement songSt = null;
+		PreparedStatement statusSt = null;
+		try {
+			//			トランザクション実装
+			con.setAutoCommit(false);
+
+			songSt = con.prepareStatement("delete from song_statuses where song_id=?");
+			songSt.setInt(1, songId);
+			songSt.executeUpdate();
+
+			statusSt = con.prepareStatement("delete from songs where id=?");
+			statusSt.setInt(1, songId);
+			statusSt.executeUpdate();
+
+			con.commit();
+		} finally {
+			songSt.close();
+			statusSt.close();
+			con.setAutoCommit(true);
+			con.close();
 		}
 	}
 

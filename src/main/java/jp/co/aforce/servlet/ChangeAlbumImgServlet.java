@@ -16,6 +16,7 @@ import jakarta.servlet.http.Part;
 import jp.co.aforce.beans.Album;
 import jp.co.aforce.beans.User;
 import jp.co.aforce.dao.ProductDAO;
+import jp.co.aforce.tool.Message;
 
 @WebServlet("/ChangeAlbumImgServlet")
 @MultipartConfig(location = "C:\\pleiades-2024-03-java-win-64bit-jre_20240325\\workspace\\ShoppingSite\\src\\main\\webapp\\WEB-INF\\upload")
@@ -33,9 +34,10 @@ public class ChangeAlbumImgServlet extends HttpServlet {
 		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute("user");
 		Album oldAlbum = new Album();
+		Message msg = new Message();
 		ProductDAO productDao = new ProductDAO();
 
-		//		鰹節
+		//		カード節
 		if (user == null) {
 			response.sendRedirect("views/login.jsp");
 		}
@@ -47,7 +49,8 @@ public class ChangeAlbumImgServlet extends HttpServlet {
 		///////////////////////////////////////////////
 		//		ファイルがnullだったら、もしくは名前が空白だったら
 		if (part == null || imgName.equals("")) {
-			response.sendRedirect("views/admin-index.jsp");
+			request.setAttribute("adminErrorMsg", msg.getAdminErrorMsg(0));
+			response.sendRedirect("views/admin-message.jsp");
 		}
 
 		//		画像の保存先フォルダに、すでにある画像の名前一覧を取得し、ファイル名と比較
@@ -76,7 +79,8 @@ public class ChangeAlbumImgServlet extends HttpServlet {
 				part.write(filePath);
 				System.out.println("File saved to: " + filePath);
 			} catch (IOException e) {
-				System.out.println("Failed to save file: " + e.getMessage());
+				request.setAttribute("adminErrorMsg", msg.getAdminErrorMsg(0));
+				response.sendRedirect("views/admin-message.jsp");
 			}
 		}
 		///////////////////////////////////////////////

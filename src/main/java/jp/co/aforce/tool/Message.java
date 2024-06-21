@@ -11,6 +11,9 @@ public class Message {
 	private List<String> purchaseErrorMsg = new ArrayList<>();
 	private List<String> completeMsg = new ArrayList<>();
 	private List<String> adminCompleteMsg = new ArrayList<>();
+	private List<String> adminErrorMsg = new ArrayList<>();
+	
+	private List<String> errorMsg = new ArrayList<>();
 
 	//	コンストラクタ
 	public Message() {
@@ -49,6 +52,11 @@ public class Message {
 		/*6*/ completeMsg.add("退会手続きが完了しました");
 		
 //		管理者側成功メッセージ一覧
+		/*0*/ adminErrorMsg.add("ファイルを読み取ることができませんでした");
+		/*1*/ adminErrorMsg.add("カテゴリー情報が変更されました");
+		/*2*/ adminErrorMsg.add("カテゴリー情報が変更されました");
+		
+//		管理者側エラーメッセージ一覧
 		/*0*/ adminCompleteMsg.add("カテゴリー情報が変更されました");
 		/*1*/ adminCompleteMsg.add("アルバム情報が変更されました");
 		/*2*/ adminCompleteMsg.add("曲情報が変更されました");
@@ -57,6 +65,9 @@ public class Message {
 		/*5*/ adminCompleteMsg.add("削除に成功しました");
 		/*6*/ adminCompleteMsg.add("削除に失敗しました");
 		/*7*/ adminCompleteMsg.add("削除に失敗しました");
+		
+//		管理者側成功メッセージ一覧
+		/*0*/ errorMsg.add("問題が発生しました");
 
 	}
 
@@ -76,8 +87,16 @@ public class Message {
 		return completeMsg.get(i);
 	}
 	
+	public String getAdminErrorMsg(int i) {
+		return adminErrorMsg.get(i);
+	}
+	
 	public String getAdminCompleteMsg(int i) {
 		return adminCompleteMsg.get(i);
+	}
+	
+	public String getErrorMsg(int i) {
+		return errorMsg.get(i);
 	}
 
 	public static void main(String[] args) {

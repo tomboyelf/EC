@@ -15,6 +15,7 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
 import jp.co.aforce.beans.Category;
 import jp.co.aforce.beans.User;
+import jp.co.aforce.tool.Message;
 
 @WebServlet("/UploadCategoryImgServlet")
 @MultipartConfig(location = "C:\\pleiades-2024-03-java-win-64bit-jre_20240325\\workspace\\ShoppingSite\\src\\main\\webapp\\WEB-INF\\upload")
@@ -33,6 +34,7 @@ public class UploadCategoryImgServlet extends HttpServlet {
 		HttpSession session = request.getSession();
 		User user = (User)session.getAttribute("user");
 		Category category = new Category();
+		Message msg = new Message();
 		
 //		鰹節
 		if(user == null) {
@@ -49,7 +51,8 @@ public class UploadCategoryImgServlet extends HttpServlet {
 		///////////////////////////////////////////////
 		//		ファイルがnullだったら、もしくは名前が空白だったら
 		if (part == null || imgName.equals("")) {
-			response.sendRedirect("views/admin-index.jsp");
+			request.setAttribute("adminErrorMsg", msg.getAdminErrorMsg(0));
+			response.sendRedirect("views/admin-message.jsp");
 		}
 
 		//		画像の保存先フォルダに、すでにある画像の名前一覧を取得し、ファイル名と比較
@@ -78,7 +81,8 @@ public class UploadCategoryImgServlet extends HttpServlet {
 				part.write(filePath);
 				System.out.println("File saved to: " + filePath);
 			} catch (IOException e) {
-				System.out.println("Failed to save file: " + e.getMessage());
+				request.setAttribute("adminErrorMsg", msg.getAdminErrorMsg(0));
+				response.sendRedirect("views/admin-message.jsp");
 			}
 		}
 		///////////////////////////////////////////////
