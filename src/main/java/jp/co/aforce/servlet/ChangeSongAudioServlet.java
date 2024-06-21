@@ -16,6 +16,7 @@ import jakarta.servlet.http.Part;
 import jp.co.aforce.beans.Song;
 import jp.co.aforce.beans.User;
 import jp.co.aforce.dao.ProductDAO;
+import jp.co.aforce.tool.Message;
 
 @WebServlet("/ChangeSongAudioServlet")
 @MultipartConfig(location = "C:\\pleiades-2024-03-java-win-64bit-jre_20240325\\workspace\\ShoppingSite\\src\\main\\webapp\\WEB-INF\\upload")
@@ -33,6 +34,7 @@ public class ChangeSongAudioServlet extends HttpServlet {
 		HttpSession session = request.getSession();
 		User user = (User) session.getAttribute("user");
 		Song oldSong = new Song();
+		Message msg = new Message();
 		ProductDAO productDao = new ProductDAO();
 
 		//		鰹節
@@ -47,7 +49,8 @@ public class ChangeSongAudioServlet extends HttpServlet {
 		///////////////////////////////////////////////
 		//		ファイルがnullだったら、もしくは名前が空白だったら
 		if (part == null || audioName.equals("")) {
-			response.sendRedirect("views/admin-index.jsp");
+			request.setAttribute("adminErrorMsg", msg.getAdminErrorMsg(0));
+			response.sendRedirect("views/admin-message.jsp");
 		}
 
 		List<String> fileList = new ArrayList<String>();
@@ -75,13 +78,13 @@ public class ChangeSongAudioServlet extends HttpServlet {
 				part.write(filePath);
 				System.out.println("File saved to: " + filePath);
 			} catch (IOException e) {
-				System.out.println("Failed to save file: " + e.getMessage());
+				request.setAttribute("adminErrorMsg", msg.getAdminErrorMsg(0));
+				response.sendRedirect("views/admin-message.jsp");
 			}
 		}
 		///////////////////////////////////////////////
 
 		int songId = Integer.parseInt(request.getParameter("oldSongId"));
-		System.out.println("idの取得" + songId);
 		
 		try {
 			//  旧情報

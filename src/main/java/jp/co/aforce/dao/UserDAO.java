@@ -178,9 +178,9 @@ public class UserDAO extends DAO {
 		//		}
 	}
 
+//	退会
 	public int quit(int userId) throws Exception {
 
-		//		try {
 		Connection con = getConnection();
 		PreparedStatement albumSt = null;
 		PreparedStatement songSt  = null;
@@ -192,17 +192,14 @@ public class UserDAO extends DAO {
 			albumSt = con.prepareStatement("delete from album_statuses where user_id=?");
 			albumSt.setInt(1, userId);
 			int albumLine = albumSt.executeUpdate();
-			System.out.println(albumLine);
 
 			songSt = con.prepareStatement("delete from song_statuses where user_id=?");
 			songSt.setInt(1, userId);
 			int songLine = songSt.executeUpdate();
-			System.out.println(songLine);
 
 			userSt = con.prepareStatement("delete from users where id=?");
 			userSt.setInt(1, userId);
 			int userLine = userSt.executeUpdate();
-			System.out.println(userLine);
 
 			con.commit();
 

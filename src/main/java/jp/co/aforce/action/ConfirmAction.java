@@ -41,86 +41,89 @@ public class ConfirmAction extends Action {
 		//		カテゴリ変更
 		//		・3つの値がとれていないとき
 		//		・sql操作がうまくいかなかったとき
-//		カテゴリ情報変更
-		if (request.getParameter("newCategoryId") != null && request.getParameter("newCategoryImgName") != null
-				&& request.getParameter("newCategoryName") != null) {
-			int categoryId = Integer.parseInt(request.getParameter("newCategoryId"));
-			String categoryImgName = request.getParameter("newCategoryImgName");
-			String categoryName = request.getParameter("newCategoryName");
-			
-			int line = adminDao.changeCategoryImgAndCategoryName(categoryImgName, categoryName, categoryId);
-			if (line > 0) {
-				request.setAttribute("adminCompleteMsg", msg.getAdminCompleteMsg(0));
-				return "message.jsp";
-			}
-		}
 		
+		if (request.getParameter("confirmId") != null) {
 //		カテゴリ新規作成
-		if (request.getParameter("newCategoryId") == null && request.getParameter("newCategoryImgName") != null && request.getParameter("newCategoryName") != null) {
-			String categoryImgName = request.getParameter("newCategoryImgName");
-			String categoryName = request.getParameter("newCategoryName");
-			int line = adminDao.createNewCategory(categoryImgName, categoryName);
-			if (line > 0) {
-				request.setAttribute("adminCompleteMsg", msg.getAdminCompleteMsg(3));
-				return "message.jsp";
+			if (request.getParameter("confirmId").equals("createCategory")) {
+				String categoryImgName = request.getParameter("newCategoryImgName");
+				String categoryName = request.getParameter("newCategoryName");
+				int line = adminDao.createNewCategory(categoryImgName, categoryName);
+				if (line > 0) {
+					request.setAttribute("adminCompleteMsg", msg.getAdminCompleteMsg(3));
+					return "admin-message.jsp";
+				}
 			}
-		}
-		
-//		アルバム情報変更
-		if (request.getParameter("newAlbumId") != null && request.getParameter("newAlbumImgName") != null && request.getParameter("newAlbumName") != null && request.getParameter("newAlbumArtist") != null && request.getParameter("newAlbumCategory") != null) {
-			String albumImgName = request.getParameter("newAlbumImgName");
-			String albumName = request.getParameter("newAlbumName");
-			String artist = request.getParameter("newAlbumArtist");
-			int categoryId = Integer.parseInt(request.getParameter("newAlbumCategory"));
-			int albumId = Integer.parseInt(request.getParameter("newAlbumId"));
-			System.out.println(albumImgName + albumName + artist + categoryId + albumId);
 			
-			int line = adminDao.changeAlbum(albumImgName, albumName, artist,  categoryId, albumId);
-			if (line > 0) {
-				request.setAttribute("adminCompleteMsg", msg.getAdminCompleteMsg(0));
-				return "message.jsp";
+//		カテゴリ情報変更
+			if (request.getParameter("confirmId").equals("changeCategory")) {
+				int categoryId = Integer.parseInt(request.getParameter("newCategoryId"));
+				String categoryImgName = request.getParameter("newCategoryImgName");
+				String categoryName = request.getParameter("newCategoryName");
+				
+				int line = adminDao.changeCategoryImgAndCategoryName(categoryImgName, categoryName, categoryId);
+				if (line > 0) {
+					request.setAttribute("adminCompleteMsg", msg.getAdminCompleteMsg(0));
+					return "admin-message.jsp";
+				}
 			}
-		}
-		
+			
 //		アルバム新規作成
-		if (request.getParameter("newAlbumId") == null && request.getParameter("newAlbumImgName") != null && request.getParameter("newAlbumName") != null && request.getParameter("newAlbumArtist") != null && request.getParameter("newAlbumCategory") != null) {
-			String albumImgName = request.getParameter("newAlbumImgName");
-			String albumName = request.getParameter("newAlbumName");
-			String artist = request.getParameter("newAlbumArtist");
-			int categoryId = Integer.parseInt(request.getParameter("newAlbumCategory"));
-			int line = adminDao.createNewAlbum(albumImgName, albumName, artist, categoryId);
-			if (line > 0) {
-				request.setAttribute("adminCompleteMsg", msg.getAdminCompleteMsg(3));
-				return "message.jsp";
+			if (request.getParameter("confirmId").equals("createAlbum")) {
+				String albumImgName = request.getParameter("newAlbumImgName");
+				String albumName = request.getParameter("newAlbumName");
+				String artist = request.getParameter("newAlbumArtist");
+				int categoryId = Integer.parseInt(request.getParameter("newAlbumCategory"));
+				int line = adminDao.createNewAlbum(albumImgName, albumName, artist, categoryId);
+				if (line > 0) {
+					request.setAttribute("adminCompleteMsg", msg.getAdminCompleteMsg(3));
+					return "admin-message.jsp";
+				}
 			}
-		}
-		
-//		曲情報変更
-		if (request.getParameter("newSongId") != null && request.getParameter("newSongAudio") != null && request.getParameter("newSongName") != null && request.getParameter("newSongPrice") != null && request.getParameter("newSongAlbum") != null) {
-			String name = request.getParameter("newSongName");
-			int price = Integer.parseInt(request.getParameter("newSongPrice"));
-			int albumId = Integer.parseInt(request.getParameter("newSongAlbum"));
-			int songId = Integer.parseInt(request.getParameter("newSongId"));
-			String audio = request.getParameter("newSongAudio");
-			int line = adminDao.changeSong(name, audio, price, albumId, songId);
-			if (line > 0) {
-				request.setAttribute("adminCompleteMsg", msg.getAdminCompleteMsg(0));
-				return "message.jsp";
+			
+//		アルバム情報変更
+			if (request.getParameter("confirmId").equals("changeAlbum")) {
+				String albumImgName = request.getParameter("newAlbumImgName");
+				String albumName = request.getParameter("newAlbumName");
+				String artist = request.getParameter("newAlbumArtist");
+				int categoryId = Integer.parseInt(request.getParameter("newAlbumCategory"));
+				int albumId = Integer.parseInt(request.getParameter("newAlbumId"));
+				System.out.println(albumImgName + albumName + artist + categoryId + albumId);
+				
+				int line = adminDao.changeAlbum(albumImgName, albumName, artist,  categoryId, albumId);
+				if (line > 0) {
+					request.setAttribute("adminCompleteMsg", msg.getAdminCompleteMsg(1));
+					return "admin-message.jsp";
+				}
 			}
-		}
-		
+			
 //		曲新規作成
-		if (request.getParameter("newSongAudio") != null && request.getParameter("newSongName") != null && request.getParameter("newSongPrice") != null && request.getParameter("newSongAlbum") != null) {
-			String name = request.getParameter("newSongName");
-			int price = Integer.parseInt(request.getParameter("newSongPrice"));
-			int albumId = Integer.parseInt(request.getParameter("newSongAlbum"));
-			String audio = request.getParameter("newSongAudio");
-			int line = adminDao.createNewSong(name, audio, price, albumId);
-			if (line > 0) {
-				request.setAttribute("adminCompleteMsg", msg.getAdminCompleteMsg(3));
-				return "message.jsp";
+			if (request.getParameter("confirmId").equals("createSong")) {
+				String name = request.getParameter("newSongName");
+				int price = Integer.parseInt(request.getParameter("newSongPrice"));
+				int albumId = Integer.parseInt(request.getParameter("newSongAlbum"));
+				String audio = request.getParameter("newSongAudio");
+				int line = adminDao.createNewSong(name, audio, price, albumId);
+				if (line > 0) {
+					request.setAttribute("adminCompleteMsg", msg.getAdminCompleteMsg(3));
+					return "admin-message.jsp";
+				}
+			}
+			
+//		曲情報変更
+			if (request.getParameter("confirmId").equals("changeSong")) {
+				String name = request.getParameter("newSongName");
+				int price = Integer.parseInt(request.getParameter("newSongPrice"));
+				int albumId = Integer.parseInt(request.getParameter("newSongAlbum"));
+				int songId = Integer.parseInt(request.getParameter("newSongId"));
+				String audio = request.getParameter("newSongAudio");
+				int line = adminDao.changeSong(name, audio, price, albumId, songId);
+				if (line > 0) {
+					request.setAttribute("adminCompleteMsg", msg.getAdminCompleteMsg(2));
+					return "admin-message.jsp";
+				}
 			}
 		}
-		return "";
+		request.setAttribute("errorMsg", msg.getErrorMsg(0));
+		return "message.jsp";
 	}
 }

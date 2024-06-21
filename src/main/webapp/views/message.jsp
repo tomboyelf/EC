@@ -12,10 +12,12 @@
 		<p>${completeMsg}</p>
 		<a href="index.jsp">ホームへ戻る</a>
 	</c:when>
-	<c:when test="${adminCompleteMsg != null}">
-		<p>${adminCompleteMsg}</p>
-		<a href="admin-index.jsp">管理者画面へ戻る</a>
+	
+	<c:when test="${errorMsg != null}">
+		<p>${errorMsg}</p>
+		<a href="index.jsp">ホームへ戻る</a>
 	</c:when>
+	
 </c:choose>
 
 

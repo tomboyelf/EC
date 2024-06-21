@@ -2,10 +2,14 @@ package jp.co.aforce.dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AdminDAO extends DAO {
 
-//	カテゴリ情報変更
+	//	カテゴリ情報変更
 	public int changeCategoryImgAndCategoryName(String imgName, String categoryName, int id) throws Exception {
 		int line;
 		try (Connection con = getConnection();
@@ -18,8 +22,8 @@ public class AdminDAO extends DAO {
 		}
 		return line;
 	}
-	
-//	新規カテゴリ作成
+
+	//	新規カテゴリ作成
 	public int createNewCategory(String imgName, String categoryName) throws Exception {
 		int line;
 		try (Connection con = getConnection();
@@ -32,15 +36,7 @@ public class AdminDAO extends DAO {
 		return line;
 	}
 
-	//	カテゴリ削除
-	//	これ書くとしたら曲とアルバムも中間テーブルも一緒に削除するコードを書く必要がある
-	//	めんどう
-
-	//	public int deleteCategory(int categoryId) throws Exception {
-	//		
-	//	}
-
-//	アルバム情報変更
+	//	アルバム情報変更
 	public int changeAlbum(String imgName, String albumName, String artist, int categoryId, int albumId)
 			throws Exception {
 		try (Connection con = getConnection();
@@ -55,8 +51,8 @@ public class AdminDAO extends DAO {
 			return line;
 		}
 	}
-	
-//	新規アルバム作成
+
+	//	新規アルバム作成
 	public int createNewAlbum(String imgName, String albumName, String artist, int categoryId)
 			throws Exception {
 		try (Connection con = getConnection();
@@ -70,8 +66,8 @@ public class AdminDAO extends DAO {
 			return line;
 		}
 	}
-	
-//	曲情報変更
+
+	//	曲情報変更
 	public int changeSong(String songName, String audioName, int price, int songId, int albumId)
 			throws Exception {
 		try (Connection con = getConnection();
@@ -86,8 +82,8 @@ public class AdminDAO extends DAO {
 			return line;
 		}
 	}
-	
-//	新規曲作成
+
+	//	新規曲作成
 	public int createNewSong(String songName, String audioName, int price, int albumId)
 			throws Exception {
 		try (Connection con = getConnection();
@@ -101,10 +97,86 @@ public class AdminDAO extends DAO {
 			return line;
 		}
 	}
-	
-//	顧客一覧取得
-//	public int showAllUser(String songName, String audioName, int price, int albumId)
-//			throws Exception {
-//		
-//	}
+
+	//	曲削除
+	public void deleteSong(int songId) throws Exception {
+		Connection con = getConnection();
+		PreparedStatement songSt = null;
+		PreparedStatement statusSt = null;
+		try {
+			//			トランザクション実装
+			con.setAutoCommit(false);
+
+			songSt = con.prepareStatement("delete from song_statuses where song_id=?");
+			songSt.setInt(1, songId);
+			songSt.executeUpdate();
+
+			statusSt = con.prepareStatement("delete from songs where id=?");
+			statusSt.setInt(1, songId);
+			statusSt.executeUpdate();
+
+			con.commit();
+		} finally {
+			songSt.close();
+			statusSt.close();
+			con.setAutoCommit(true);
+			con.close();
+		}
+	}
+
+	//	アルバム削除
+	public void deleteAlbum(int albumId) throws Exception {
+
+		Connection con = getConnection();
+		PreparedStatement albumSt = null;
+		PreparedStatement statusSt = null;
+		try {
+			//			トランザクション実装
+			con.setAutoCommit(false);
+
+			albumSt = con.prepareStatement("delete from album_statuses where album_id=?");
+			albumSt.setInt(1, albumId);
+			albumSt.executeUpdate();
+
+			statusSt = con.prepareStatement("delete from albums where id=?");
+			statusSt.setInt(1, albumId);
+			statusSt.executeUpdate();
+
+			con.commit();
+		} finally {
+			albumSt.close();
+			statusSt.close();
+			con.setAutoCommit(true);
+			con.close();
+		}
+
+	}
+
+	//	カテゴリ削除
+	public void deleteCategory(int categoryId) throws Exception {
+		try (Connection con = getConnection();
+				PreparedStatement st = con.prepareStatement(
+						"DELETE FROM categories WHERE id = ?")) {
+			st.setInt(1, categoryId);
+			st.executeUpdate();
+		}
+	}
+
+	//	企んでる
+	public List<Integer> getSongIdForChart(Timestamp previousDate, Timestamp currentDate) throws Exception {
+		List<Integer> songIdList = new ArrayList();
+		try (Connection con = getConnection();
+				PreparedStatement st = con.prepareStatement(
+						"SELECT * FROM SONG_STATUSES WHERE status = 2 and UPDATED_AT BETWEEN '2024-06-15 00:00:00' AND '2024-06-15 23:59:59';")) {
+			st.setTimestamp(1, previousDate);
+			st.setTimestamp(2, currentDate);
+			try (ResultSet rs = st.executeQuery()) {
+				while (rs.next()) {
+					songIdList.add(rs.getInt("id"));
+				}
+			}
+		}
+		return songIdList;
+	}
+
 }

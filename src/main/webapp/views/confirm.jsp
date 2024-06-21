@@ -5,7 +5,37 @@
 <h1>確認画面</h1>
 
 <!-- 会員登録確認と購入確認 -->
+
 <c:choose>
+	<c:when test="${deleteId != null}">
+		<c:choose>
+			<c:when test="${deleteId == 'song'}">
+				<p>本当に削除しますか</p>
+				<form action="Delete.action?deleteId=deleteSong" method="post">
+					<input type="hidden" name="songId" value="${songId}">
+					<input type="button" onclick="history.back()" value="やめる">
+					<input type="submit" value="削除">
+				</form>
+			</c:when>
+			<c:when test="${deleteId == 'album'}">
+				<p>本当に削除しますか</p>
+				<form action="Delete.action?deleteId=deleteAlbum" method="post">
+					<input type="hidden" name="albumId" value="${albumId}">
+					<input type="button" onclick="history.back()" value="やめる">
+					<input type="submit" value="削除">
+				</form>
+			</c:when>
+			<c:when test="${deleteId == 'category'}">
+				<p>本当に削除しますか</p>
+				<form action="Delete.action?deleteId=deleteCategory" method="post">
+					<input type="hidden" name="categoryId" value="${categoryId}">
+					${categoryId}
+					<input type="button" onclick="history.back()" value="やめる">
+					<input type="submit" value="削除">
+				</form>
+			</c:when>
+		</c:choose>
+	</c:when>
 
 	<c:when test="${confirmUser != null}">
 		<form action="SignupConfirm.action" method="post">
@@ -29,19 +59,35 @@
 	</c:when>
 
 	<c:when test="${selectedSongsList != null}">
+		<c:set var="total" value="0" />
 		<c:forEach var="cartItem" items="${selectedSongsList}">
 			<p>${cartItem.albumName}</p>
 			<p>${cartItem.artist}</p>
 			<p>${cartItem.name}</p>
 			<p>${cartItem.price}</p>
+			<c:set var="total" value="${total + cartItem.price}" />
 		</c:forEach>
+			<p>合計${total}円</p>
 		<form action="Confirm.action" method="post">
 			<c:forEach var="cartItem" items="${selectedSongsList}">
 				<input type="hidden" name="selectedSongs" value="${cartItem.id}">
 			</c:forEach>
+			<input type="button" onclick="history.back()" value="カートに戻る">
 			<input type="submit" value="購入">
 		</form>
-		<a href="ShowCart.action">カートに戻る</a>
+	</c:when>
+	
+	
+	<c:when test="${newCategory != null && oldCategory == null}">
+		<form action="views/Confirm.action" method="post">
+			<img src="image/category/${newCategory.imgName}" alt="categoryImage" rel="preload">
+			<p>${newCategory.name}</p>
+			<input type="hidden" name="newCategoryImgName" value="${newCategory.imgName}">
+			<input type="hidden" name="newCategoryName" value="${newCategory.name}">
+			<input type="hidden" name="confirmId" value="createCategory">
+			<input type="button" onclick="history.back()" value="修正">
+			<input type="submit" value="確定">
+		</form>
 	</c:when>
 
 	<c:when test="${newCategory != null && oldCategory != null}">
@@ -55,17 +101,23 @@
 			<input type="hidden" name="newCategoryId" value="${newCategory.id}">
 			<input type="hidden" name="newCategoryImgName" value="${newCategory.imgName}">
 			<input type="hidden" name="newCategoryName" value="${newCategory.name}">
+			<input type="hidden" name="confirmId" value="changeCategory">
 			<input type="button" onclick="history.back()" value="修正">
 			<input type="submit" value="確定">
 		</form>
 	</c:when>
 	
-	<c:when test="${newCategory != null && oldCategory == null}">
+	<c:when test="${newAlbum != null && oldAlbum == null}">
 		<form action="views/Confirm.action" method="post">
-			<img src="image/category/${newCategory.imgName}" alt="categoryImage" rel="preload">
-			<p>${newCategory.name}</p>
-			<input type="hidden" name="newCategoryImgName" value="${newCategory.imgName}">
-			<input type="hidden" name="newCategoryName" value="${newCategory.name}">
+			<img src="image/album/${newAlbum.albumImgName}" alt="albumImage" rel="preload">
+			<p>${newAlbum.name}</p>
+			<p>${newAlbum.artist}</p>
+			<p>${newAlbum.categoryName}</p>
+			<input type="hidden" name="newAlbumImgName" value="${newAlbum.albumImgName}">
+			<input type="hidden" name="newAlbumName" value="${newAlbum.name}">
+			<input type="hidden" name="newAlbumArtist" value="${newAlbum.artist}">
+			<input type="hidden" name="newAlbumCategory" value="${newAlbum.categoryId}">
+			<input type="hidden" name="confirmId" value="createAlbum">
 			<input type="button" onclick="history.back()" value="修正">
 			<input type="submit" value="確定">
 		</form>
@@ -88,6 +140,7 @@
 			<input type="hidden" name="newAlbumName" value="${newAlbum.name}">
 			<input type="hidden" name="newAlbumArtist" value="${newAlbum.artist}">
 			<input type="hidden" name="newAlbumCategory" value="${newAlbum.categoryId}">
+			<input type="hidden" name="confirmId" value="changeAlbum">
 			<input type="button" onclick="history.back()" value="修正">
 			<input type="submit" value="確定">
 		</form>
@@ -103,6 +156,7 @@
 			<input type="hidden" name="newSongName" value="${newSong.name}">
 			<input type="hidden" name="newSongPrice" value="${newSong.price}">
 			<input type="hidden" name="newSongAlbum" value="${newSong.albumId}">
+			<input type="hidden" name="confirmId" value="createSong">
 			<input type="button" onclick="history.back()" value="修正">
 			<input type="submit" value="確定">
 		</form>
@@ -125,6 +179,7 @@
 			<input type="hidden" name="newSongPrice" value="${newSong.price}">
 			<input type="hidden" name="newSongAlbum" value="${newSong.albumId}">
 			<input type="hidden" name="newSongAudio" value="${newSong.audioName}">
+			<input type="hidden" name="confirmId" value="changeSong">
 			<input type="button" onclick="history.back()" value="修正">
 			<input type="submit" value="確定">
 		</form>
