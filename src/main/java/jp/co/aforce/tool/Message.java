@@ -53,6 +53,10 @@ public class Message {
 		/*1*/ adminCompleteMsg.add("アルバム情報が変更されました");
 		/*2*/ adminCompleteMsg.add("曲情報が変更されました");
 		/*3*/ adminCompleteMsg.add("追加に成功しました");
+		/*4*/ adminCompleteMsg.add("追加に失敗しました");
+		/*5*/ adminCompleteMsg.add("削除に成功しました");
+		/*6*/ adminCompleteMsg.add("削除に失敗しました");
+		/*7*/ adminCompleteMsg.add("削除に失敗しました");
 
 	}
 

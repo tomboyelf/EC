@@ -33,6 +33,7 @@ public class AdminAction extends Action {
 			if(request.getParameter("adminId").equals("category")) {
 				List<Category> categoryList = productDao.getCategories();
 				request.setAttribute("categoryList", categoryList);
+				request.setAttribute("admin", "admin");
 				return "admin-product.jsp";
 			}
 //		アルバム設定へ
@@ -41,6 +42,7 @@ public class AdminAction extends Action {
 				request.setAttribute("albumList", albumList);
 				List<Category> categoryList = productDao.getCategories();
 				request.setAttribute("categoryOption", categoryList);
+				request.setAttribute("admin", "admin");
 				return "admin-product.jsp";
 			}
 //		曲設定へ
@@ -49,6 +51,7 @@ public class AdminAction extends Action {
 				request.setAttribute("songList", songList);
 				List<Album> albumList = productDao.getAlbumAndSingleOrderedByDate();
 				request.setAttribute("albumOption", albumList);
+				request.setAttribute("admin", "admin");
 				return "admin-product.jsp";
 			}
 //		顧客情報へ

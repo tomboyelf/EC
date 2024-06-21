@@ -4,59 +4,82 @@
 <%@taglib prefix="c" uri="jakarta.tags.core"%>
 
 <c:choose>
-	<c:when test="${categoryList != null && categoryList.size() != 0}">
-		<h2>新規カテゴリ登録</h2>
-		<form method="POST" enctype="multipart/form-data" action="/ShoppingSite/UploadCategoryImgServlet">
-			<p>画像</p><input type="file" name="file" required /><br> 
-			<p>カテゴリ名</p><input type="text" name="categoryName" value="${category.categoryName}" required /><br> 
-			<input type="submit" value="登録" />
-		</form>
-		<h2>カテゴリー一覧</h2>
-		<c:forEach var="category" items="${categoryList}">
-			<a href="Admin.action?categoryId=${category.id}">${category.name}</a>
-		</c:forEach>
-	</c:when>
-
-	<c:when test="${albumList != null && albumList.size() != 0}">
-		<h2>新規アルバム（シングル）登録</h2>
-		<form method="POST" enctype="multipart/form-data" action="/ShoppingSite/UploadAlbumImgServlet">
-			<p>画像</p><input type="file" name="file" required /><br> 
-			<p>アルバム名</p><input type="text" name="albumName" required /><br>
-			<p>アーティスト</p><input type="text" name="artist" required /><br>
-				<select name="categoryOption">
-					<c:forEach var="category" items="${categoryOption}">
-						<option value="${category.id}" form="next">${category.name}</option>
-					</c:forEach>
-				</select>
-			<input type="submit" value="登録" />
-		</form>
-		<h2>アルバム一覧</h2>
-		<c:forEach var="album" items="${albumList}">
-			<a href="Admin.action?albumId=${album.id}">${album.name}</a>
-		</c:forEach>
-	</c:when>
-	
-	<c:when test="${songList.size() != 0 && songList != null}">
-		<h2>新規曲登録</h2>
-		<form method="POST" enctype="multipart/form-data" action="/ShoppingSite/UploadSongAudioServlet">
-			<select name="albumOption">
-				<c:forEach var="album" items="${albumOption}">
-					<option value="${album.id}" form="next">${album.name}</option>
+	<c:when test="${admin != null}">
+		<c:choose>
+			<c:when test="${categoryOption!= null && categoryOption.size() != 0}">
+				<h2>新規アルバム（シングル）登録</h2>
+				<form method="POST" enctype="multipart/form-data"
+					action="/ShoppingSite/UploadAlbumImgServlet">
+					<p>画像</p>
+					<input type="file" name="file" required /><br>
+					<p>アルバム名</p>
+					<input type="text" name="albumName" required /><br>
+					<p>アーティスト</p>
+					<input type="text" name="artist" required /><br> <select
+						name="categoryOption">
+						<c:forEach var="category" items="${categoryOption}">
+							<option value="${category.id}" form="next">${category.name}</option>
+						</c:forEach>
+					</select> <input type="submit" value="登録" />
+				</form>
+			<c:if test="${albumList != null && albumList.size() != 0}">
+				<h2>アルバム一覧</h2>
+				<c:forEach var="album" items="${albumList}">
+					<a href="Admin.action?albumId=${album.id}">${album.name}</a>
 				</c:forEach>
-			</select>
-			<p>曲名</p><input type="text" name="songName" required /><br>
-			<p>値段</p><input type="number" name="price" required /><br>
-			<p>音源</p><input type="file" name="file" required /><br>
-			<input type="submit" value="登録" />
-		</form>
-		<h2>曲一覧</h2>
-		<c:forEach var="song" items="${songList}">
-			<a href="Admin.action?songId=${song.id}">${song.name}</a>
-		</c:forEach>
+			</c:if>
+			</c:when>
+			
+			<c:when test="${albumOption!= null && albumOption.size() != 0}">
+				<h2>新規曲登録</h2>
+				<form method="POST" enctype="multipart/form-data"
+					action="/ShoppingSite/UploadSongAudioServlet">
+					<select name="albumOption">
+						<c:forEach var="album" items="${albumOption}">
+							<option value="${album.id}" form="next">${album.name}</option>
+						</c:forEach>
+					</select>
+					<p>曲名</p>
+					<input type="text" name="songName" required /><br>
+					<p>値段</p>
+					<input type="number" name="price" required /><br>
+					<p>音源</p>
+					<input type="file" name="file" required /><br> <input
+						type="submit" value="登録" />
+				</form>
+				<c:if test="${songList.size() != 0 && songList != null}">
+					<h2>曲一覧</h2>
+					<c:forEach var="song" items="${songList}">
+						<a href="Admin.action?songId=${song.id}">${song.name}</a>
+					</c:forEach>
+				</c:if>
+			</c:when>
+			
+			<c:otherwise>
+				<h2>新規カテゴリ登録</h2>
+				<form method="POST" enctype="multipart/form-data"
+					action="/ShoppingSite/UploadCategoryImgServlet">
+					<p>画像</p>
+					<input type="file" name="file" required /><br>
+					<p>カテゴリ名</p>
+					<input type="text" name="categoryName"
+						value="${category.categoryName}" required /><br> <input
+						type="submit" value="登録" />
+				</form>
+				<h2>カテゴリー一覧</h2>
+				<c:forEach var="category" items="${categoryList}">
+					<a href="Admin.action?categoryId=${category.id}">${category.name}</a>
+				</c:forEach>
+			</c:otherwise>
+		</c:choose>
 	</c:when>
 
 	<c:when 
 		test="${category != null}">
+			<form action="Delete.action?deleteId=category" method="post">
+				<input type="hidden" name="categoryId" value="${category.id}">
+				<input type="submit" value="削除">
+			</form>
 			<img src="../image/category/${category.imgName}"
 				alt="categoryImage">
 			<form method="POST" enctype="multipart/form-data"
@@ -80,6 +103,10 @@
 	
 	<c:when
 		test="${album != null && categoryOption != null}">
+			<form action="Delete.action?deleteId=album" method="post">
+				<input type="hidden" name="albumId" value="${album.id}">
+				<input type="submit" value="削除">
+			</form>
 			<img src="../image/album/${album.albumImgName}" alt="albumImage">
 			<form method="post" enctype="multipart/form-data"
 				action="/ShoppingSite/ChangeAlbumImgServlet">
@@ -115,6 +142,10 @@
 	</c:when>
 	
 	<c:when test="${song != null}">
+		<form action="Delete.action?deleteId=song" method="post">
+				<input type="hidden" name="songId" value="${song.id}">
+				<input type="submit" value="削除">
+		</form>
 		<audio src="../audio/${song.audioName}" controls preload="auto"></audio>
 		<form method="post" action="Admin.action?songChangeId=nameChange">
 			<input type="text" name="name" value="${song.name}" required /><br>

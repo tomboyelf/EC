@@ -5,8 +5,50 @@
 <h1>確認画面</h1>
 
 <!-- 会員登録確認と購入確認 -->
-<c:choose>
 
+<c:choose>
+	<c:when test="${deleteId != null}">
+		<c:choose>
+			<c:when test="${deleteId == 'song'}">
+				<p>本当に削除しますか</p>
+				<form action="Delete.action?deleteId=deleteSong" method="post">
+					<input type="hidden" name="songId" value="${songId}">
+					<input type="button" onclick="history.back()" value="やめる">
+					<input type="submit" value="削除">
+				</form>
+			</c:when>
+			<c:when test="${deleteId == 'album'}">
+				<p>本当に削除しますか</p>
+				<form action="Delete.action?deleteId=deleteAlbum" method="post">
+					<input type="hidden" name="albumId" value="${albumId}">
+					<input type="button" onclick="history.back()" value="やめる">
+					<input type="submit" value="削除">
+				</form>
+			</c:when>
+			<c:when test="${deleteId == 'category'}">
+				<p>本当に削除しますか</p>
+				<form action="Delete.action?deleteId=deleteCategory" method="post">
+					<input type="hidden" name="categoryId" value="${categoryId}">
+					${categoryId}
+					<input type="button" onclick="history.back()" value="やめる">
+					<input type="submit" value="削除">
+				</form>
+			</c:when>
+		</c:choose>
+	</c:when>
+
+	<c:when test="${adminCompleteMsg005 != null || adminCompleteMsg006}">
+		<p>${adminCompleteMsg005}</p>
+		<p>${adminCompleteMsg006}</p>
+		<a href="admin-index.jsp">管理者画面へ戻る</a>
+	</c:when>
+
+	<c:when test="${adminCompleteMsg007 != null}">
+		<p>${adminCompleteMsg007}</p>
+		<p>このカテゴリ、またはアルバムに含まれている情報を削除してからもう一度試してください</p>
+		<a href="admin-index.jsp">管理者画面へ戻る</a>
+	</c:when>
+	
 	<c:when test="${confirmUser != null}">
 		<form action="SignupConfirm.action" method="post">
 			<p>ユーザーネーム:${confirmUser.username}</p><br>
